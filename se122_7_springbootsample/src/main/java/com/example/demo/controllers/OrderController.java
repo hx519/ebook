@@ -24,10 +24,8 @@ public class OrderController {
     @CrossOrigin
     @PostMapping("/order")
     public String receiveOrder(@RequestBody Map<String, Object> data) {
-//        System.out.println(data);
         List<Map<String, Object>> book = (List<Map<String, Object>>) data.get("book");
         String Uid = (String) data.get("uid");
-//        orderService.addOrder(book, "1");
         System.out.println(book);
         System.out.println(Uid);
         orderService.addOrder(book, Uid);
@@ -36,12 +34,6 @@ public class OrderController {
 
     @CrossOrigin
     @PostMapping("/getOrders")
-//    public List<List<OrderItem>> getOrders(@RequestBody String Uid) {
-//        System.out.println(Uid);
-//        List<List<OrderItem>> orders = orderService.getOrders(Uid);
-//        System.out.println(orders);
-//        return orders;
-//    }
     public List<Map<String, Object>> getOrders(@RequestParam String Uid) {
         return orderService.getOrders(Uid);
     }
@@ -55,14 +47,12 @@ public class OrderController {
     @CrossOrigin
     @PostMapping("/search")
     public List<Map<String, Object>> search(@RequestParam String keyword) {
-//        return orderService.getOrders("2");
         return orderService.search(keyword);
     }
 
     @CrossOrigin
     @PostMapping("/searchMy")
     public List<Map<String, Object>> searchMy(@RequestParam String keyword, @RequestParam String Uid) {
-//        return orderService.getOrders("2");
         return orderService.searchMy(keyword, Uid);
     }
 }

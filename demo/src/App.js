@@ -17,12 +17,11 @@ import StaticView from './view/StaticView';
 
 function App() {
 
-    const [loggedIn, setLoggedIn] = React.useState(false);
 
     return (
         <Router>
         <Routes>
-            <Route path="/" element={loggedIn ? <Home /> : <LoginView onLoginSuccess={() => setLoggedIn(true)} />} />
+            <Route path="/" element={<LoginView />} />
             <Route path="/Home" element={<Home />} />
             <Route path="/Cart" element={<Cart />} />
             <Route path="/MyProfile" element={<User />} />

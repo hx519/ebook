@@ -11,23 +11,6 @@ import java.util.Map;
 
 @Service
 public class bookServiceImpl implements bookService{
-//    @Autowired
-//    private  bookRepository bookRepository;
-//
-//    public bookServiceImpl(bookRepository bookRepository) {
-//        this.bookRepository = bookRepository;
-//    }
-//
-//    public List<Book> getBooks() {
-//        return bookRepository.findAll();
-//    }
-//
-//    public Book getBookById(Long id) {
-//        return bookRepository.getBookById(id);
-//    }
-//    public void deleteBook(Long id){
-//        bookRepository.deleteById(id);
-//    }
     @Autowired
     private bookDao bookDao;
 

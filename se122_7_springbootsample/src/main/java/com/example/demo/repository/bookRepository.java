@@ -6,13 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-//public interface bookRepository extends JpaRepository<Book,Integer>{
-//    List<Book> findAll();
-//    Book getBookByBid(Long bid);
-//
-//    void removeBookByBid(Long bid);
-//}
-
 @Repository
 public interface bookRepository extends JpaRepository<Book,Integer>{
     List<Book> findAll();

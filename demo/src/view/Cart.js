@@ -60,25 +60,14 @@ const Cart = () => {
     }
 
     // 声明存储购买数量的状态变量
-    // const [bookQuantities, setBookQuantities] = useState({});
     const [bookQuantities, setBookQuantities] = useState([]);
     useEffect(() => {
-        // 初始化各本书的购买数量为 1
         const initQuantities = booksOnCart.map(book => ({
           id: book.id,
           quantity: 1,
         }));
         setBookQuantities(initQuantities);
       }, []);
-
-    // useEffect(() => {
-    //     // 初始化各本书的购买数量为 1
-    //     const initQuantities = {};
-    //     booksOnCart.forEach(book => {
-    //         initQuantities[book.id] = 1;
-    //     });
-    //     setBookQuantities(initQuantities);
-    // }, []);
 
     const sendOrder = () => {
         if(!localStorage.getItem('mode')){

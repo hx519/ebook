@@ -28,20 +28,11 @@ public class MyOrder {
     @ManyToOne
     @JoinColumn(name = "uid", insertable = false, updatable = false)
     private User user;
-//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-//    private List<OrderItem> orderItems;
-
-//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-//    private List<OrderItem> orderItems;
 
     public void setUid(Long uid) {
         this.uid = uid;
     }
 
-//    public void setUser(User user) {
-//        this.user = user;
-//        this.uid = user.getUid();
-//    }
 }
 
 

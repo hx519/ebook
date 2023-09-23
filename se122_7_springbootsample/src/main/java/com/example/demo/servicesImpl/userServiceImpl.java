@@ -1,9 +1,9 @@
 package com.example.demo.servicesImpl;
 
 import com.example.demo.services.userService;
+import com.example.demo.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.demo.repository.userRepository;
 import com.example.demo.dao.userDao;
 import com.example.demo.entity.User;
 
@@ -14,10 +14,6 @@ import java.util.List;
 public class userServiceImpl implements userService{
     @Autowired
     private  userDao userDao;
-
-//    public userServiceImpl(userRepository userRepository) {
-//        this.userRepository = userRepository;
-//    }
 
     public User check(String username, String password){
         return userDao.checkUser(username, password);
@@ -38,5 +34,9 @@ public class userServiceImpl implements userService{
 
     public boolean changeMode(String uid){
         return userDao.changeMode(uid);
+    }
+
+    public Msg logout() {
+        return new Msg(1, "logout success");
     }
 }

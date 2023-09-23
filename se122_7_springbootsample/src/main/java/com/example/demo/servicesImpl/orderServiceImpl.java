@@ -1,6 +1,8 @@
 package com.example.demo.servicesImpl;
 
 import com.example.demo.entity.Book;
+import com.example.demo.kafka.ConsumerService;
+import com.example.demo.kafka.ProducerService;
 import com.example.demo.services.orderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,10 @@ public class orderServiceImpl implements orderService{
     private  orderDao orderDao;
     @Autowired
     private bookDao bookDao;
+    @Autowired
+    private ConsumerService consumerService;
+    @Autowired
+    private ProducerService producerService;
 
     public List<Map<String, Object>> getOrders(String Uid)
     {
@@ -59,6 +65,7 @@ public class orderServiceImpl implements orderService{
     }
 
     public void addOrder(List<Map<String, Object>> order, String Uid){
+        producerService.sendMessage("placeOrder-topic", "placeOrder");
         long time = System.currentTimeMillis();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
         String[] date = df.format(time).split("-");
@@ -76,7 +83,8 @@ public class orderServiceImpl implements orderService{
             orderDao.addOrderItem(String.valueOf(oid), (String) item.get("title"), (String) item.get("author"), (String) item.get("price"), (String) item.get("quantity"));
         }
 
-//        orderDao.addOrder(order, Uid);
+        producerService.sendMessage("Ordered-topic", "Ordered");
+
     }
 
     public List<Map<String, Object>> getAllOrders()
@@ -126,14 +134,6 @@ public class orderServiceImpl implements orderService{
 
             // 处理时间范围搜索
             String[] date = keyword.split("-");
-//            if (date.length == 2) {
-//                String[] min = date[0].split("/");
-//                String[] max = date[1].split("/");
-//                if(Long.parseLong((String) order.get("year")) >= Long.parseLong(min[0]) && Long.parseLong((String) order.get("year")) <= Long.parseLong(max[0]) &&
-//                        Long.parseLong((String) order.get("month")) >= Long.parseLong(min[1]) && Long.parseLong((String) order.get("month")) <= Long.parseLong(max[1]) &&
-//                        Long.parseLong((String) order.get("day")) >= Long.parseLong(min[2]) && Long.parseLong((String) order.get("day")) <= Long.parseLong(max[2]))
-//                    result.add(order);
-//            }
             if (date.length == 2) {
                 String[] min = date[0].split("/");
                 String[] max = date[1].split("/");
@@ -163,16 +163,6 @@ public class orderServiceImpl implements orderService{
 
             // 处理时间范围搜索
             String[] date = keyword.split("-");
-//            if (date.length == 3) {
-//                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-//                Timestamp startTimestamp = new Timestamp(simpleDateFormat.parse(date[0]).getTime());
-//                Timestamp endTimestamp = new Timestamp(simpleDateFormat.parse(date[1]).getTime());
-//                Timestamp orderTime = Timestamp.valueOf(order.get("year") + "-" + order.get("month") + "-" + order.get("day") + " " + order.get("hour") + ":" + order.get("minute") + ":00");
-//                if (orderTime.after(startTimestamp) && orderTime.before(endTimestamp)) {
-//                    result.add(order);
-//                    break;
-//                }
-//            }
             if (date.length == 2) {
                 String[] min = date[0].split("/");
                 String[] max = date[1].split("/");

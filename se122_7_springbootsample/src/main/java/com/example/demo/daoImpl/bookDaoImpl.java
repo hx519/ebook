@@ -15,10 +15,6 @@ public class bookDaoImpl implements bookDao{
     @Autowired
     private bookRepository bookRepository;
 
-//    public bookDaoImpl(bookRepository bookRepository) {
-//        this.bookRepository = bookRepository;
-//    }
-
     public List<Book> getBooks() {
         return bookRepository.findAll();
     }

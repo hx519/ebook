@@ -2,16 +2,12 @@ package com.example.demo.controllers;
 import java.awt.*;
 import java.util.ArrayList;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.services.bookService;
 import com.example.demo.entity.Book;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class BookController {

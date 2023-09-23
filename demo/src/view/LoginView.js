@@ -31,7 +31,7 @@ export default function LoginView({ onLoginSuccess }) {
             localStorage.setItem('email', data.email);
             localStorage.setItem('avatar', data.avatar);
             localStorage.setItem('mode', data.mode);
-            onLoginSuccess();
+            window.location.href = "/Home";
           }
           else{
             alert('用户名或密码错误');

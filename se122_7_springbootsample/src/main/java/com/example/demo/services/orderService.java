@@ -7,7 +7,6 @@ import java.util.Map;
 import com.example.demo.entity.OrderItem;
 
 public interface orderService {
-//    List<List<order_item>> getOrders(String Uid);
     List<Map<String, Object>> getOrders(String Uid);
     void addOrder(List<Map<String, Object>> order, String Uid);
     List<Map<String, Object>> getAllOrders();
