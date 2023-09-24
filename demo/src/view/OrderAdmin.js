@@ -63,6 +63,7 @@ const OrderAdmin = () => {
       url = 'http://localhost:8080/search?keyword=' + searchValue;
     }
     fetch(url, {
+      credentials: 'include',
       method: 'POST',
       body: localStorage.getItem('uid'),
     })

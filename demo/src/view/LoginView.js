@@ -7,6 +7,7 @@ export default function LoginView({ onLoginSuccess }) {
       const { username, password } = values;
       fetch('http://localhost:8080/login', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'

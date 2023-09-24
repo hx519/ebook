@@ -62,6 +62,7 @@ const AdminView = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
             }
         )
             .then(res => res.json())

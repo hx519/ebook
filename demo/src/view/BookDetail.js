@@ -106,6 +106,7 @@ export function BookDetail (props) {
             fetch('http://localhost:8080/deleteBook', {
                 method: 'POST',
                 body: id,
+                credentials: 'include',
             })
             navigate('/Home');
         }
@@ -119,7 +120,7 @@ export function BookDetail (props) {
               alert('您没有权限编辑书籍');
               return;
             }
-            fetch(`http://localhost:8080/getBook/${id}`)
+            fetch(`http://localhost:8080/getBook/${id}`,{credentials: 'include',})
               .then(response => response.json())
               .then(data => {
                 Modal.confirm({
@@ -196,6 +197,7 @@ export function BookDetail (props) {
                         headers: {
                             'Content-Type': 'application/json',
                         },
+                        credentials: 'include',
                       body: bookJson,
                     }).then(response => {
                       if (!response.ok) {

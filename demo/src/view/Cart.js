@@ -104,6 +104,7 @@ const Cart = () => {
                 const uid = localStorage.getItem("uid");
                 fetch('http://localhost:8080/order', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'

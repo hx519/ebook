@@ -68,6 +68,7 @@ const StaticView = () => {
 
     useEffect(() => {
         fetch('http://localhost:8080/getOrders?Uid='+localStorage.getItem('uid'), {
+            credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

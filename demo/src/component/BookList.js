@@ -55,6 +55,7 @@ function addBook() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: bookJson
             })
             window.location.reload();
@@ -70,7 +71,7 @@ export class BookList extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:8080/bookList')
+        fetch('http://localhost:8080/bookList', {credentials: 'include',})
             .then(response => response.json())
             .then((data) => {
                 this.setState({ books: data})

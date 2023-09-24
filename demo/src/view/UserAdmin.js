@@ -57,6 +57,7 @@ const UserAdmin = () => {
             return;
         }
         fetch('http://localhost:8080/getAllUsers', {
+            credentials: 'include',
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,6 +76,7 @@ const UserAdmin = () => {
 
     const handleDisableUser = (id) => {
         fetch(`http://localhost:8080/changeMode`, {
+            credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -58,6 +58,19 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
+        <!-- Spring Boot Starter for Logging -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+
+        <!-- Logback (You can also use Log4j or others) -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <build>

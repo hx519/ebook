@@ -13,6 +13,7 @@ const Register = () => {
         }
 
         fetch('http://localhost:8080/register', {
+            credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

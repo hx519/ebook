@@ -14,7 +14,7 @@ public class TimerServiceImpl implements TimerService {
         if(!isTiming){
             startTime = System.currentTimeMillis();
             isTiming = true;
-            System.out.println("kaishijishi1");
+            System.out.println("开始计时");
         }
     }
 

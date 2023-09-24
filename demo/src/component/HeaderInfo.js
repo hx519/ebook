@@ -18,6 +18,7 @@ export class HeaderInfo extends React.Component {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include',
     })
       .then((response) => response.json())
       .then((data) => {

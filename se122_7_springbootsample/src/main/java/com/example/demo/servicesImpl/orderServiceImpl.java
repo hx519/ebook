@@ -4,6 +4,7 @@ import com.example.demo.entity.Book;
 import com.example.demo.kafka.ConsumerService;
 import com.example.demo.kafka.ProducerService;
 import com.example.demo.services.orderService;
+import com.example.demo.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.repository.orderRepository;
@@ -26,8 +27,6 @@ public class orderServiceImpl implements orderService{
     private  orderDao orderDao;
     @Autowired
     private bookDao bookDao;
-    @Autowired
-    private ConsumerService consumerService;
     @Autowired
     private ProducerService producerService;
 
@@ -65,7 +64,6 @@ public class orderServiceImpl implements orderService{
     }
 
     public void addOrder(List<Map<String, Object>> order, String Uid){
-        producerService.sendMessage("placeOrder-topic", "placeOrder");
         long time = System.currentTimeMillis();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
         String[] date = df.format(time).split("-");
@@ -82,7 +80,7 @@ public class orderServiceImpl implements orderService{
         for(Map<String, Object> item: order){
             orderDao.addOrderItem(String.valueOf(oid), (String) item.get("title"), (String) item.get("author"), (String) item.get("price"), (String) item.get("quantity"));
         }
-
+        System.out.println("数据库添加订单成功");
         producerService.sendMessage("Ordered-topic", "Ordered");
 
     }
@@ -176,6 +174,11 @@ public class orderServiceImpl implements orderService{
 
         }
         return result;
+    }
+
+    public Msg placeOrder(Map<String, Object> data) {
+        producerService.sendMessage("placeOrder-topic", data.toString());
+        return new Msg(1, "发送订单消息成功");
     }
 
 

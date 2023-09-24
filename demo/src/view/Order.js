@@ -70,6 +70,7 @@ const Order = () => {
       url = 'http://localhost:8080/searchMy?keyword=' + searchValue + '&Uid=' + localStorage.getItem('uid');
     }
     fetch(url, {
+      credentials: 'include',
       method: 'POST',
       body: localStorage.getItem('uid'),
     })
