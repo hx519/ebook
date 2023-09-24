@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 @Service
-@Scope("prototype")
+@Scope("session")
 public class TimerServiceImpl implements TimerService {
     private long startTime = 0;
     private boolean isTiming = false;

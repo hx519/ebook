@@ -9,24 +9,25 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
-@Scope("session")
 public class TimerController {
     @Autowired
     private userService userService;
-
     @Autowired
-    private TimerService timerService;
+//    private TimerService timerService;
+    private WebApplicationContext applicationContext;
 
     @PostMapping("/login")
     public User login(HttpSession httpSession, @RequestBody Map<String, String> input){
         // 判断用户名和密码是否符合user_password表中的记录
         User user = userService.check(input.get("user"), input.get("pwd"));
         if(user != null){
+            TimerService timerService = applicationContext.getBean(TimerService.class);
             timerService.start();
 //            System.out.println("session id: " + httpSession.getId());
             System.out.println(timerService);
@@ -42,6 +43,7 @@ public class TimerController {
     public ResponseEntity<Msg> logout(HttpSession httpSession) {
         Msg result = userService.logout();
         if (result.getStatus() >= 0) {
+            TimerService timerService = applicationContext.getBean(TimerService.class);
             long time = timerService.stop();
             result.setData(time);
 //            System.out.println("session id: " + httpSession.getId());
