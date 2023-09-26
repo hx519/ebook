@@ -5,7 +5,6 @@ import com.example.demo.services.TimerService;
 import com.example.demo.services.userService;
 import com.example.demo.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,6 @@ public class TimerController {
     @Autowired
     private userService userService;
     @Autowired
-//    private TimerService timerService;
     private WebApplicationContext applicationContext;
 
     @PostMapping("/login")
