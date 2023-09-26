@@ -1,6 +1,6 @@
 import React from 'react';
 import '../css/index.css';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, Modal } from 'antd';
 
 export default function LoginView({ onLoginSuccess }) {
     const onFinish = (values) => {
@@ -18,24 +18,28 @@ export default function LoginView({ onLoginSuccess }) {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
-          if(data != null){
-            if(data.mode === "ban"){
-              alert('您的帐号已被禁用,请联系管理员');
+          console.log(data.data);
+          if(data.status === 1){
+            if(data.data.mode === "ban"){
+              Modal.error({
+                title: '该账户已被禁用，请联系管理员'
+            });
               return;
             }
-            alert('登录成功');
-            localStorage.setItem('uid', data.uid);
-            localStorage.setItem('username', data.username);
-            localStorage.setItem('address', data.address);
-            localStorage.setItem('phone', data.phone);
-            localStorage.setItem('email', data.email);
-            localStorage.setItem('avatar', data.avatar);
-            localStorage.setItem('mode', data.mode);
+            localStorage.setItem('uid', data.data.uid);
+            localStorage.setItem('username', data.data.username);
+            localStorage.setItem('address', data.data.address);
+            localStorage.setItem('phone', data.data.phone);
+            localStorage.setItem('email', data.data.email);
+            localStorage.setItem('avatar', data.data.avatar);
+            localStorage.setItem('mode', data.data.mode);
             window.location.href = "/Home";
           }
           else{
-            alert('用户名或密码错误');
+            Modal.error({
+              title: '登录失败',
+              content: data.message,
+            });
           }
         }
         )

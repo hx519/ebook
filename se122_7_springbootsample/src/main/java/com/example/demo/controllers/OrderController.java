@@ -1,53 +1,76 @@
 package com.example.demo.controllers;
 import com.example.demo.kafka.ProducerService;
+import com.example.demo.services.OrderService;
+import com.example.demo.utils.Msg;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.Map;
-import com.example.demo.services.orderService;
 
 @RestController
 public class OrderController {
     @Autowired
-    private orderService orderService;
-    @Autowired
-    private ProducerService producerService;
+    private OrderService orderService;
 
-    public OrderController(orderService orderService) {
-        this.orderService = orderService;
-    }
-
-    @PostMapping("/order")
-    public String receiveOrder(@RequestBody Map<String, Object> data) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonString = objectMapper.writeValueAsString(data);
-        System.out.println("后端接收到的下订单请求");
-        producerService.sendMessage("PlaceOrder-topic", jsonString);
-        return "success";
+    @PostMapping("/receiveOrder")
+    public ResponseEntity<Msg> receiveOrder(@RequestBody Map<String, Object> data) throws JsonProcessingException {
+        Msg result = orderService.receiveOrder(data);
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
     @PostMapping("/getOrders")
-    public List<Map<String, Object>> getOrders(@RequestParam String Uid) {
-        return orderService.getOrders(Uid);
+    public ResponseEntity<Msg> getOrders(@RequestParam String Uid) {
+        Msg result = orderService.getOrders(Uid);
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
-    @PostMapping ("/getAllOrders")
-    public List<Map<String, Object>> getAllOrders() {
-        return orderService.getAllOrders();
+    @PostMapping("/getAllOrders")
+    public ResponseEntity<Msg> getAllOrders() {
+        Msg result = orderService.getAllOrders();
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
     @PostMapping("/search")
-    public List<Map<String, Object>> search(@RequestParam String keyword) {
-        return orderService.search(keyword);
+    public ResponseEntity<Msg> search(@RequestParam String keyword) {
+        Msg result = orderService.search(keyword);
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
     @PostMapping("/searchMy")
-    public List<Map<String, Object>> searchMy(@RequestParam String keyword, @RequestParam String Uid) {
-        return orderService.searchMy(keyword, Uid);
+    public ResponseEntity<Msg> searchMy(@RequestParam String keyword, @RequestParam String Uid) {
+        Msg result = orderService.searchMy(keyword, Uid);
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 }
 

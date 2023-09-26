@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import com.example.demo.services.orderService;
+import com.example.demo.services.OrderService;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ import java.util.Map;
 @Service
 public class ConsumerService {
     @Autowired
-    private orderService orderService;
+    private OrderService orderService;
     @Autowired
     private ObjectMapper objectMapper;
 

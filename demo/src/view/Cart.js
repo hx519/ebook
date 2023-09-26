@@ -102,7 +102,7 @@ const Cart = () => {
                     quantity: bookQuantities.find(q => q.id === item.id).quantity.toString(),
                 }));
                 const uid = localStorage.getItem("uid");
-                fetch('http://localhost:8080/order', {
+                fetch('http://localhost:8080/receiveOrder', {
                     method: 'POST',
                     credentials: 'include',
                     headers: {

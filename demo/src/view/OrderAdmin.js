@@ -69,8 +69,8 @@ const OrderAdmin = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        setData(data);
+        console.log(data.data);
+        setData(data.data);
       })
       .catch((error) => {
         console.log(error);

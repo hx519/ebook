@@ -105,6 +105,9 @@ export function BookDetail (props) {
             console.log(id);
             fetch('http://localhost:8080/deleteBook', {
                 method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                  },
                 body: id,
                 credentials: 'include',
             })
@@ -127,48 +130,38 @@ export function BookDetail (props) {
                   title: '编辑书籍',
                   style: { width: '80%' },
                   content: (
-                    // <div>
-                    //     <div>书名：<input id='bookName' type='text' defaultValue={data.title} /> </div>
-                    //     <div>作者：<input id='author' type='text' defaultValue={data.author} /> </div>
-                    //     <div>ISBN：<input id='isbn' type='text' defaultValue={data.isbn} /> </div>
-                    //     <div>分类：<input id='type' type='text' defaultValue={data.type} /> </div>
-                    //     <div>价格：<input id='price' type='text' defaultValue={data.price} /> </div>
-                    //     <div>库存：<input id='inventory' type='text' defaultValue={data.inventory} /> </div>
-                    //     <div>图片：<input id='image' type='text' defaultValue={data.image} /> </div>
-                    //     <div>简介：<input id='description' type='text' defaultValue={data.description} /> </div>
-                    // </div>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div style={{ marginBottom: '16px' }}>
                       <span style={{ fontWeight: 'bold', marginRight: '16px'}}>书名：</span>
-                      <input id='bookName' type='text' defaultValue={data.title} />
+                      <input id='bookName' type='text' defaultValue={data.data.title} />
                     </div>
                     <div style={{ marginBottom: '16px' }}>
                       <span style={{ fontWeight: 'bold', marginRight: '16px'}}>作者：</span>
-                      <input id='author' type='text' defaultValue={data.author} />
+                      <input id='author' type='text' defaultValue={data.data.author} />
                     </div>
                     <div style={{ marginBottom: '16px' }}>
                       <span style={{ fontWeight: 'bold', marginRight: '16px'}}>ISBN：</span>
-                      <input id='isbn' type='text' defaultValue={data.isbn} />
+                      <input id='isbn' type='text' defaultValue={data.data.isbn} />
                     </div>
                     <div style={{ marginBottom: '16px' }}>
                       <span style={{ fontWeight: 'bold', marginRight: '16px'}}>分类：</span>
-                      <input id='type' type='text' defaultValue={data.type} />
+                      <input id='type' type='text' defaultValue={data.data.type} />
                     </div>
                     <div style={{ marginBottom: '16px' }}>
                       <span style={{ fontWeight: 'bold', marginRight: '16px'}}>价格：</span>
-                      <input id='price' type='text' defaultValue={data.price} />
+                      <input id='price' type='text' defaultValue={data.data.price} />
                     </div>
                     <div style={{ marginBottom: '16px' }}>
                       <span style={{ fontWeight: 'bold', marginRight: '16px'}}>库存：</span>
-                      <input id='inventory' type='text' defaultValue={data.inventory} />
+                      <input id='inventory' type='text' defaultValue={data.data.inventory} />
                     </div>
                     <div style={{ marginBottom: '16px' }}>
                       <span style={{ fontWeight: 'bold', marginRight: '16px'}}>图片：</span>
-                      <input id='image' type='text' defaultValue={data.image} />
+                      <input id='image' type='text' defaultValue={data.data.image} />
                     </div>
                     <div style={{ marginBottom: '16px' }}>
                       <span style={{ fontWeight: 'bold', marginRight: '16px'}}>简介：</span>
-                      <input id='description' type='text' defaultValue={data.description} />
+                      <input id='description' type='text' defaultValue={data.data.description} />
                     </div>
                   </div>
                   ),
@@ -204,7 +197,7 @@ export function BookDetail (props) {
                         throw new Error('修改书籍失败');
                       }
                     });
-                    // window.location.reload();
+                    window.location.href = '/home'
                   },
                 });
               });

@@ -76,7 +76,7 @@ const StaticView = () => {
         }
         ).then((response) => response.json())
         .then((data) => {
-            setOrders(data);
+            setOrders(data.data);
         });
     }, []);
 

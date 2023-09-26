@@ -2,9 +2,13 @@ package com.example.demo.controllers;
 import java.awt.*;
 import java.util.ArrayList;
 
+import com.example.demo.kafka.ProducerService;
+import com.example.demo.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.demo.services.bookService;
+import com.example.demo.services.BookService;
 import com.example.demo.entity.Book;
 
 import javax.servlet.http.HttpSession;
@@ -14,42 +18,72 @@ import java.util.Map;
 @RestController
 public class BookController {
     @Autowired
-    private  bookService bookService;
-
-    public BookController(bookService bookService) {
-        this.bookService = bookService;
-    }
+    private  BookService bookService;
 
     @GetMapping("/bookList")
-    public List<Book> getBooks(HttpSession httpSession){
-//        System.out.println("session id: " + httpSession.getId());
-        return bookService.getBooks();
+    public ResponseEntity<Msg> getAllBooks(){
+        Msg result = bookService.getAllBooks();
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
     @PostMapping("/deleteBook")
-    public void deleteBook(@RequestBody String id){
-        bookService.deleteBook(Long.parseLong(id));
+    public ResponseEntity<Msg> deleteBook(@RequestBody Long id){
+        Msg result = bookService.deleteBook(id);
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
     @PostMapping("/addBook")
-    public void addBook(@RequestBody Map<String, String> book){
-        System.out.println(book);
-        bookService.addBook(book);
+    public ResponseEntity<Msg> addBook(@RequestBody Map<String, String> book){
+        Msg result = bookService.addBook(book);
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
     @GetMapping("/search")
-    public Book search(@RequestParam String title){
-        return bookService.search(title);
+    public ResponseEntity<Msg> search(@RequestParam String keyword){
+        Msg result = bookService.search(keyword);
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
     @PostMapping("/updateBook/{id}")
-    public void updateBook(@RequestBody Map<String, String> book, @PathVariable String id){
-        bookService.updateBook(book, Long.parseLong(id));
+    public ResponseEntity<Msg> updateBook(@RequestBody Map<String, String> book, @PathVariable String id){
+        Msg result = bookService.updateBook(book, Long.parseLong(id));
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
     @GetMapping("/getBook/{id}")
-    public Book getBook(@PathVariable String id){
-        return bookService.getBook(Long.parseLong(id));
+    public ResponseEntity<Msg> getBook(@PathVariable String id){
+        Msg result = bookService.getBook(Long.parseLong(id));
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
     }
 
 }

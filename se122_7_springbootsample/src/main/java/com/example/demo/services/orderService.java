@@ -6,12 +6,13 @@ import java.util.Map;
 
 import com.example.demo.entity.OrderItem;
 import com.example.demo.utils.Msg;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-public interface orderService {
-    List<Map<String, Object>> getOrders(String Uid);
+public interface OrderService {
+    Msg getOrders(String Uid);
     void addOrder(List<Map<String, Object>> order, String Uid);
-    List<Map<String, Object>> getAllOrders();
-    List<Map<String, Object>> search(String keyword);
-    List<Map<String, Object>> searchMy(String keyword, String Uid);
-    Msg placeOrder(Map<String, Object> data);
+    Msg getAllOrders();
+    Msg search(String keyword);
+    Msg searchMy(String keyword, String Uid);
+    Msg receiveOrder(Map<String, Object> data) throws JsonProcessingException;
 }

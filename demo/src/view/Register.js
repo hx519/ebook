@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Form, Input, Button} from "antd";
+import {Form, Input, Button, Modal} from "antd";
 
 const Register = () => {
     const [password, setPassword] = useState("");
@@ -8,7 +8,9 @@ const Register = () => {
         const { username, confirmPassword, email, phone, address, avatar } = values;
         // 确认密码
         if(password !== confirmPassword){
-            alert('两次密码不一致');
+            Modal.error({
+                title: '两次密码不一致'
+            });
             return;
         }
 
@@ -25,12 +27,17 @@ const Register = () => {
                 return response.json();
             })
             .then((data) => {
-                    console.log(data);
-                    if(data !== false){
-                        alert('注册成功');
+                    console.log(data.data);
+                    if(data.status === 1){
+                        Modal.success({
+                            title: '注册成功'});
+                        window.location.href = "/";
                     }
                     else{
-                        alert('注册失败，该用户名已被注册');
+                        Modal.error({
+                            title: '注册失败',
+                            content: data.message,
+                        });
                     }
                 }
             )

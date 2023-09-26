@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button } from "antd";
+import { Row, Col, Button, Modal } from "antd";
 import "../css/index.css";
 import logo from "../assets/logo.jpg";
 import bookstore from "../assets/bookstore.png";

@@ -4,7 +4,7 @@ import com.example.demo.entity.Book;
 import java.util.List;
 import java.util.Map;
 
-public interface bookDao {
+public interface BookDao {
     List<Book> getBooks();
     Book getBookById(Long id);
     void deleteBook(Long id);
@@ -13,4 +13,5 @@ public interface bookDao {
     Book search(String keyword);
     void updateBook(Map<String, String> book, Long id);
     Book getBook(Long id);
+    Book getBookByTitle(String title);
 }

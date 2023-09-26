@@ -66,9 +66,12 @@ const AdminView = () => {
             }
         )
             .then(res => res.json())
-            .then(res => {
-                console.log(res);
-                setOrders(res);
+            .then((data) => {
+                console.log(data.data);
+                setOrders(data.data);
+            })
+            .catch((error) => {
+                console.log(error);
             })
     }, [])
 
@@ -77,37 +80,6 @@ const AdminView = () => {
         console.log('Selected Time: ', value);
         console.log('Formatted Selected Time: ', dateString);
     };
-    // const onOk = (value) => {
-    //     // 获取时间
-    //     setEndDate(value[1]._d);
-    //     setStartDate(value[0]._d);
-        
-    //     // 筛选消费榜和热销榜
-    //     let consumeList = [];
-    //     let hotList = [];
-    //     for(let i = 0; i < orders.length; i++) {
-    //         let orderDate = new Date(orders[i].year, orders[i].month - 1, orders[i].day, orders[i].hour, orders[i].minute);
-    //         console.log(orderDate);
-    //         if(orderDate >= value[0]._d && orderDate <= value[1]._d) {
-    //             for(let j = 0; j < orders[i].items.length; j++) {
-    //                 if(orders[i].items[j].title in hotList) {
-    //                     hotList[orders[i].items[j].title] += orders[i].items[j].quantity;
-    //                 }
-    //                 else {
-    //                     hotList[orders[i].items[j].title] = orders[i].items[j].quantity;
-    //                 }                  
-    //             }
-    //             if(orders[i].username in consumeList) {
-    //                 consumeList[orders[i].username] += orders[i].price;
-    //             }
-    //             else {
-    //                 consumeList[orders[i].username] = orders[i].price;
-    //             }
-    //         }
-    //     }
-    //     console.log(hotList);
-    //     console.log(consumeList);
-    // };
     const onOk = (value) => {
         // 筛选消费榜和热销榜
         let consumeList = [];

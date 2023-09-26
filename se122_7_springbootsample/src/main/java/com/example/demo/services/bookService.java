@@ -1,16 +1,16 @@
 package com.example.demo.services;
 import com.example.demo.repository.bookRepository;
 import com.example.demo.entity.Book;
+import com.example.demo.utils.Msg;
 
 import java.util.List;
 import java.util.Map;
 
-public interface bookService {
-    List<Book> getBooks();
-    Book getBookById(Long id);
-    void deleteBook(Long id);
-    void addBook(Map<String, String> book);
-    Book search(String keyword);
-    void updateBook(Map<String, String> book, Long id);
-    Book getBook(Long id);
+public interface BookService {
+    Msg getAllBooks();
+    Msg deleteBook(Long id);
+    Msg addBook(Map<String, String> book);
+    Msg search(String keyword);
+    Msg updateBook(Map<String, String> book, Long id);
+    Msg getBook(Long id);
 }

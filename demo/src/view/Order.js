@@ -5,7 +5,6 @@ import { Layout, theme, Menu, List } from 'antd';
 import { IdcardOutlined, ShoppingCartOutlined, HomeOutlined, UnorderedListOutlined,LineChartOutlined } from '@ant-design/icons';
 import { HeaderInfo } from "../component/HeaderInfo";
 import { useNavigate } from 'react-router-dom';
-// import Search from 'antd/es/transfer/search';
 
 const { Column } = Table;
 const { Search } = Input;
@@ -76,8 +75,8 @@ const Order = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        setData(data);
+        console.log(data.data);
+        setData(data.data);
       })
       .catch((error) => {
         console.log(error);

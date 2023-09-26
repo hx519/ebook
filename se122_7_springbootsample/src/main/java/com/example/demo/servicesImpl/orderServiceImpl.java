@@ -1,10 +1,14 @@
 package com.example.demo.servicesImpl;
 
+import com.example.demo.dao.BookDao;
+import com.example.demo.dao.OrderDao;
 import com.example.demo.entity.Book;
 import com.example.demo.kafka.ConsumerService;
 import com.example.demo.kafka.ProducerService;
-import com.example.demo.services.orderService;
+import com.example.demo.services.OrderService;
 import com.example.demo.utils.Msg;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.repository.orderRepository;
@@ -18,19 +22,25 @@ import java.util.Date;
 
 import com.example.demo.entity.MyOrder;
 import com.example.demo.entity.OrderItem;
-import com.example.demo.dao.orderDao;
-import com.example.demo.dao.bookDao;
 
 @Service
-public class orderServiceImpl implements orderService{
+public class OrderServiceImpl implements OrderService {
     @Autowired
-    private  orderDao orderDao;
+    private OrderDao orderDao;
     @Autowired
-    private bookDao bookDao;
+    private BookDao bookDao;
     @Autowired
     private ProducerService producerService;
 
-    public List<Map<String, Object>> getOrders(String Uid)
+    public Msg receiveOrder(Map<String, Object> data) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(data);
+        System.out.println("后端接收到的下订单请求");
+        producerService.sendMessage("PlaceOrder-topic", jsonString);
+        return new Msg(1, "下订单请求发送成功");
+    }
+
+    public Msg getOrders(String Uid)
     {
         List<MyOrder> myOrders = orderDao.getMyOrder(Uid);
         List<Map<String, Object>> orders = new ArrayList<>();
@@ -60,7 +70,7 @@ public class orderServiceImpl implements orderService{
             order.put("items", items);
             orders.add(order);
         }
-        return orders;
+        return new Msg(1, "获取订单成功", orders);
     }
 
     public void addOrder(List<Map<String, Object>> order, String Uid){
@@ -85,7 +95,7 @@ public class orderServiceImpl implements orderService{
 
     }
 
-    public List<Map<String, Object>> getAllOrders()
+    public Msg getAllOrders()
     {
         List<MyOrder> myOrders = orderDao.getAllMyOrder();
         List<Map<String, Object>> orders = new ArrayList<>();
@@ -115,11 +125,11 @@ public class orderServiceImpl implements orderService{
             order.put("items", items);
             orders.add(order);
         }
-        return orders;
+        return new Msg(1, "获取全部订单成功", orders);
     }
 
-    public List<Map<String, Object>> search(String keyword) {
-        List<Map<String, Object>> all = getAllOrders();
+    public Msg search(String keyword) {
+        List<Map<String, Object>> all = (List<Map<String, Object>>) getAllOrders().getData();
         List<Map<String, Object>> result = new ArrayList<>();
         for (Map<String, Object> order : all) {
             List<Map<String, Object>> items = (List<Map<String, Object>>) order.get("items");
@@ -144,11 +154,11 @@ public class orderServiceImpl implements orderService{
             }
 
         }
-        return result;
+        return new Msg(1, "搜索成功", result);
     }
 
-    public List<Map<String, Object>> searchMy(String keyword, String Uid) {
-        List<Map<String, Object>> all = getOrders(Uid);
+    public Msg searchMy(String keyword, String Uid) {
+        List<Map<String, Object>> all = (List<Map<String, Object>>) getOrders(Uid).getData();
         List<Map<String, Object>> result = new ArrayList<>();
         for (Map<String, Object> order : all) {
             List<Map<String, Object>> items = (List<Map<String, Object>>) order.get("items");
@@ -173,13 +183,9 @@ public class orderServiceImpl implements orderService{
             }
 
         }
-        return result;
+        return new Msg(1, "搜索成功", result);
     }
 
-    public Msg placeOrder(Map<String, Object> data) {
-        producerService.sendMessage("placeOrder-topic", data.toString());
-        return new Msg(1, "发送订单消息成功");
-    }
 
 
 }

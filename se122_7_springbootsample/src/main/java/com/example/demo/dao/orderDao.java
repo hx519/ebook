@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import com.example.demo.entity.MyOrder;
 
-public interface orderDao {
+public interface OrderDao {
     void addOrder(List<Map<String, Object>> order, String Uid);
     List<List<OrderItem>> getOrders(String Uid);
     MyOrder addMyOrder(String uid, String year, String month, String day, String hour, String minute, String total_price);

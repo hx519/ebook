@@ -6,10 +6,10 @@ import com.example.demo.utils.Msg;
 import java.util.Map;
 import java.util.List;
 
-public interface userService {
-    User check(String username, String password);
-    boolean register(Map<String, String> input);
-    List<User> getAllUsers();
-    boolean changeMode(String uid);
+public interface UserService {
+    Msg check(String username, String password);
+    Msg register(Map<String, String> input);
+    Msg getAllUsers();
+    Msg changeMode(String uid);
     Msg logout();
 }

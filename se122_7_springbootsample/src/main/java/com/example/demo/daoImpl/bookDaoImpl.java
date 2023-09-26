@@ -1,5 +1,5 @@
 package com.example.demo.daoImpl;
-import com.example.demo.dao.bookDao;
+import com.example.demo.dao.BookDao;
 import com.example.demo.entity.Book;
 import com.example.demo.repository.bookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class bookDaoImpl implements bookDao{
+public class BookDaoImpl implements BookDao {
     @Autowired
     private bookRepository bookRepository;
 
@@ -68,5 +68,9 @@ public class bookDaoImpl implements bookDao{
 
     public Book getBook(Long id){
         return bookRepository.getBookByBid(id);
+    }
+
+    public Book getBookByTitle(String title){
+        return bookRepository.findBookByTitle(title);
     }
 }

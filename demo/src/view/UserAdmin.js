@@ -1,7 +1,7 @@
 import React from "react";
 import {IdcardOutlined, ShoppingCartOutlined, HomeOutlined, UnorderedListOutlined,LineChartOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router";
-import { Layout, Menu, Input, Button, List, Card, message } from 'antd';
+import { Layout, Menu, Input, Button, List, Card, message, Modal } from 'antd';
 import {HeaderInfo} from "../component/HeaderInfo";
 import { BookList } from "../component/BookList";
 
@@ -65,13 +65,13 @@ const UserAdmin = () => {
             },
         })
         .then((res) => res.json())
-        .then((res) => {
-            console.log(res);
-            setData(res);
+        .then((data) => {
+            setData(data.data);
         })
         .catch((err) => {
-            alert(err.message);
+            console.error(err.message)
         })
+
     }, []);
 
     const handleDisableUser = (id) => {
@@ -87,15 +87,15 @@ const UserAdmin = () => {
             }),
         })
         .then((res) => res.json())
-        .then((res) => {
-            if(res === true)
+        .then((data) => {
+            if(data.status === 1)
                 message.success('操作成功');
             else
                 message.error('操作失败');
             window.location.reload();
         })
         .catch((err) => {
-            alert(err.message);
+            console.errot(err.message);
         })
     }
 

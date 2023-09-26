@@ -2,7 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.entity.User;
 import com.example.demo.services.TimerService;
-import com.example.demo.services.userService;
+import com.example.demo.services.UserService;
 import com.example.demo.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,24 +16,24 @@ import java.util.Map;
 @RestController
 public class TimerController {
     @Autowired
-    private userService userService;
+    private UserService userService;
     @Autowired
     private WebApplicationContext applicationContext;
 
     @PostMapping("/login")
-    public User login(HttpSession httpSession, @RequestBody Map<String, String> input){
+    public ResponseEntity<Msg> login(HttpSession httpSession, @RequestBody Map<String, String> input){
         // 判断用户名和密码是否符合user_password表中的记录
-        User user = userService.check(input.get("user"), input.get("pwd"));
-        if(user != null){
+        Msg result = userService.check(input.get("user"), input.get("pwd"));
+        if(result.getStatus() >= 0){
             TimerService timerService = applicationContext.getBean(TimerService.class);
             timerService.start();
 //            System.out.println("session id: " + httpSession.getId());
             System.out.println(timerService);
             System.out.println(this);
-            return user;
+            return ResponseEntity.ok(result);
         }
         else{
-            return null;
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 

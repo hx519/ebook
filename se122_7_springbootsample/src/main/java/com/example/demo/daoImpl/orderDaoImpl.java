@@ -1,11 +1,11 @@
 package com.example.demo.daoImpl;
 
+import com.example.demo.dao.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.example.demo.repository.orderRepository;
 import com.example.demo.repository.orderItemRepository;
 import com.example.demo.repository.userRepository;
-import com.example.demo.dao.orderDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import com.example.demo.entity.OrderItem;
 import java.util.HashMap;
 
 @Repository
-public class orderDaoImpl implements orderDao{
+public class OrderDaoImpl implements OrderDao {
     @Autowired
     private orderRepository orderRepository;
     @Autowired

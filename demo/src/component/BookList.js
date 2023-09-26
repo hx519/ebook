@@ -58,7 +58,27 @@ function addBook() {
                 credentials: 'include',
                 body: bookJson
             })
-            window.location.reload();
+            .then(response => response.json())
+            .then((data) => {
+                console.log(data.message);
+                if(data.status === 1){
+                    window.location.reload();
+                }
+                else{
+                    Modal.error({
+                        title: '新增失败',
+                        content: data.message,
+                    });
+                    }
+                })
+            .catch((error) => {
+                console.error(error);
+                Modal.error({
+                    title: '新增失败',
+                    content: '新增失败！',
+                });
+            }
+        )
         }   
 })
 }
@@ -74,7 +94,7 @@ export class BookList extends React.Component {
         fetch('http://localhost:8080/bookList', {credentials: 'include',})
             .then(response => response.json())
             .then((data) => {
-                this.setState({ books: data})
+                this.setState({ books: data.data})
             })
             .catch(console.log("error"))
     }
