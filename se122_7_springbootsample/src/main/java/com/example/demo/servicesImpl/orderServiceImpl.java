@@ -81,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void addOrder(List<Map<String, Object>> order, String Uid){
+    public void addOrder(List<Map<String, Object>> order, String Uid) throws JsonProcessingException {
             long time = System.currentTimeMillis();
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
             String[] date = df.format(time).split("-");
@@ -102,7 +102,28 @@ public class OrderServiceImpl implements OrderService {
                 orderItemDao.addOrderItem(String.valueOf(oid), (String) item.get("title"), (String) item.get("author"), (String) item.get("price"), (String) item.get("quantity"));
             }
             System.out.println("数据库添加订单项成功");
-        producerService.sendMessage("Ordered-topic", "Ordered");
+
+            // 发送消息
+        Map<String, Object> data = new java.util.HashMap<>();
+        data.put("uid", Uid);
+//        MyOrder newOrder = orderDao.getMyOrder(String.valueOf(oid)).get(0);
+        MyOrder newOrder = myOrder;
+        data.put("time", newOrder.getYear() + "-" + newOrder.getMonth() + "-" + newOrder.getDay() + " " + newOrder.getHour() + ":" + newOrder.getMinute());
+        data.put("price", newOrder.getPrice());
+        List<OrderItem> orderItems = orderDao.getOrderItem(String.valueOf(oid));
+        List<Map<String, Object>> items = new ArrayList<>();
+        for (OrderItem orderItem: orderItems){
+            Map<String, Object> item = new java.util.HashMap<>();
+            item.put("title", orderItem.getTitle());
+            item.put("author", orderItem.getAuthor());
+            item.put("price", orderItem.getPrice());
+            item.put("quantity", orderItem.getQuantity());
+            items.add(item);
+        }
+        data.put("items", items);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(data);
+        producerService.sendMessage("Ordered-topic", jsonString);
 
     }
 

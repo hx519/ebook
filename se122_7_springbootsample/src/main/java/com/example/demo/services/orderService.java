@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public interface OrderService {
     Msg getOrders(String Uid);
-    void addOrder(List<Map<String, Object>> order, String Uid);
+    void addOrder(List<Map<String, Object>> order, String Uid) throws JsonProcessingException;
     Msg getAllOrders();
     Msg search(String keyword);
     Msg searchMy(String keyword, String Uid);

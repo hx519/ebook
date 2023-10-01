@@ -1,5 +1,5 @@
 package com.example.demo.services;
-import com.example.demo.repository.bookRepository;
+import com.example.demo.repository.BookRepository;
 import com.example.demo.entity.Book;
 import com.example.demo.utils.Msg;
 

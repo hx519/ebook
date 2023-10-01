@@ -73,9 +73,9 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/testTransaction")
-    public void testTransaction(@RequestBody List<Map<String, Object>> data){
-        orderService.addOrder(data, "2");
-    }
+//    @PostMapping("/testTransaction")
+//    public void testTransaction(@RequestBody List<Map<String, Object>> data){
+//        orderService.addOrder(data, "2");
+//    }
 }
 

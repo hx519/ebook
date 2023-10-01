@@ -8,6 +8,7 @@ import {HeaderInfo} from "../component/HeaderInfo";
 import { useNavigate } from 'react-router-dom';
 import { InputNumber } from 'antd';
 import {Modal} from "antd";
+import { createWebSocket } from '../service/WebSocketService';
 
 const { Column } = Table;
 
@@ -93,6 +94,7 @@ const Cart = () => {
                 </div>
             ),
             onOk() {
+                createWebSocket(localStorage.getItem('uid'));
                 const data = booksOnCart?.map(item => ({
                     bid: item.bid.toString(),
                     title: item.title,
@@ -119,10 +121,10 @@ const Cart = () => {
                             return response.json();
                     })
                     .then((data) => {
-                        Modal.success({
-                            title: '成功',
-                            content: '订单提交成功！',
-                        });
+                        // Modal.success({
+                        //     title: '成功',
+                        //     content: '订单提交成功！',
+                        // });
                         booksOnCart.splice(0, booksOnCart.length);
                     })
                     .catch((error) => {

@@ -16,7 +16,7 @@ import javax.websocket.server.ServerEndpoint;
 
 @Component
 @Slf4j
-@ServerEndpoint("/websocket/{userId}")  // 接口路径 ws://localhost:8087/webSocket/userId;
+@ServerEndpoint("/websocket/{userId}")  // 接口路径 ws://localhost:8080/webSocket/userId;
 
 public class WebSocket {
 
