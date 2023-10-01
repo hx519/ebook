@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.User;
 
 @Repository
-public interface orderRepository extends JpaRepository<MyOrder,Integer>{
+public interface OrderRepository extends JpaRepository<MyOrder,Integer>{
     List<MyOrder> findAllByUser(User user);
     MyOrder findByOid(Long oid);
 }

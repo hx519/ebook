@@ -4,9 +4,9 @@ import com.example.demo.dao.UserDao;
 import com.example.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import com.example.demo.repository.userRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.entity.UserPassword;
-import com.example.demo.repository.userPasswordRepository;
+import com.example.demo.repository.UserPasswordRepository;
 
 import java.util.List;
 import java.util.Map;
@@ -14,9 +14,9 @@ import java.util.Map;
 @Repository
 public class UserDaoImpl implements UserDao {
     @Autowired
-    private userRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    private userPasswordRepository userPasswordRepository;
+    private UserPasswordRepository userPasswordRepository;
 
     public User findUserByUsername(String username){
         return userRepository.findUserByUsername(username);

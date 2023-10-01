@@ -2,6 +2,7 @@ package com.example.demo.servicesImpl;
 
 import com.example.demo.dao.BookDao;
 import com.example.demo.dao.OrderDao;
+import com.example.demo.dao.OrderItemDao;
 import com.example.demo.entity.Book;
 import com.example.demo.kafka.ConsumerService;
 import com.example.demo.kafka.ProducerService;
@@ -11,7 +12,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.demo.repository.orderRepository;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +29,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderDao orderDao;
     @Autowired
     private BookDao bookDao;
+    @Autowired
+    private OrderItemDao orderItemDao;
     @Autowired
     private ProducerService producerService;
 
@@ -85,10 +87,11 @@ public class OrderServiceImpl implements OrderService {
             bookDao.updateInventory(Long.parseLong((String) item.get("bid")), (String) item.get("quantity"));
         }
 
+        // 添加订单项
         MyOrder myOrder = orderDao.addMyOrder(Uid, date[0], date[1], date[2], date[3], date[4], String.valueOf(total));
         Long oid = myOrder.getOid();
         for(Map<String, Object> item: order){
-            orderDao.addOrderItem(String.valueOf(oid), (String) item.get("title"), (String) item.get("author"), (String) item.get("price"), (String) item.get("quantity"));
+            orderItemDao.addOrderItem(String.valueOf(oid), (String) item.get("title"), (String) item.get("author"), (String) item.get("price"), (String) item.get("quantity"));
         }
         System.out.println("数据库添加订单成功");
         producerService.sendMessage("Ordered-topic", "Ordered");

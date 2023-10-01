@@ -3,9 +3,9 @@ package com.example.demo.daoImpl;
 import com.example.demo.dao.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import com.example.demo.repository.orderRepository;
-import com.example.demo.repository.orderItemRepository;
-import com.example.demo.repository.userRepository;
+import com.example.demo.repository.OrderRepository;
+import com.example.demo.repository.OrderItemRepository;
+import com.example.demo.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +17,11 @@ import java.util.HashMap;
 @Repository
 public class OrderDaoImpl implements OrderDao {
     @Autowired
-    private orderRepository orderRepository;
+    private OrderRepository orderRepository;
     @Autowired
-    private orderItemRepository orderItemRepository;
+    private OrderItemRepository orderItemRepository;
     @Autowired
-    private userRepository userRepository;
+    private UserRepository userRepository;
 
     public List<List<OrderItem>> getOrders(String Uid){
         List<List<OrderItem>> list = new ArrayList<>();
@@ -75,16 +75,16 @@ public class OrderDaoImpl implements OrderDao {
         return myOrder;
     }
 
-    public void addOrderItem(String oid, String title, String author, String price, String quantity)
-    {
-        OrderItem orderItem = new OrderItem();
-        orderItem.setOid(Long.parseLong(oid));
-        orderItem.setTitle(title);
-        orderItem.setAuthor(author);
-        orderItem.setPrice(price);
-        orderItem.setQuantity(quantity);
-        orderItemRepository.save(orderItem);
-    }
+//    public void addOrderItem(String oid, String title, String author, String price, String quantity)
+//    {
+//        OrderItem orderItem = new OrderItem();
+//        orderItem.setOid(Long.parseLong(oid));
+//        orderItem.setTitle(title);
+//        orderItem.setAuthor(author);
+//        orderItem.setPrice(price);
+//        orderItem.setQuantity(quantity);
+//        orderItemRepository.save(orderItem);
+//    }
 
     public List<MyOrder> getMyOrder(String Uid)
     {
