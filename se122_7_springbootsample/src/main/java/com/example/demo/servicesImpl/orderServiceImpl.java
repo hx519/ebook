@@ -3,8 +3,6 @@ package com.example.demo.servicesImpl;
 import com.example.demo.dao.BookDao;
 import com.example.demo.dao.OrderDao;
 import com.example.demo.dao.OrderItemDao;
-import com.example.demo.entity.Book;
-import com.example.demo.kafka.ConsumerService;
 import com.example.demo.kafka.ProducerService;
 import com.example.demo.services.OrderService;
 import com.example.demo.utils.Msg;
@@ -22,6 +20,10 @@ import java.util.Date;
 
 import com.example.demo.entity.MyOrder;
 import com.example.demo.entity.OrderItem;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
+
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -34,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProducerService producerService;
 
+    @Override
     public Msg receiveOrder(Map<String, Object> data) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(data);
@@ -42,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
         return new Msg(1, "下订单请求发送成功");
     }
 
+    @Override
     public Msg getOrders(String Uid)
     {
         List<MyOrder> myOrders = orderDao.getMyOrder(Uid);
@@ -75,29 +79,34 @@ public class OrderServiceImpl implements OrderService {
         return new Msg(1, "获取订单成功", orders);
     }
 
+    @Override
+    @Transactional
     public void addOrder(List<Map<String, Object>> order, String Uid){
-        long time = System.currentTimeMillis();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
-        String[] date = df.format(time).split("-");
-
-        // 获取总价并维护每本书的库存
-        long total = 0;
-        for(Map<String, Object> item: order){
-            total += Long.parseLong((String) item.get("price")) * Long.parseLong((String) item.get("quantity"));
-            bookDao.updateInventory(Long.parseLong((String) item.get("bid")), (String) item.get("quantity"));
-        }
-
-        // 添加订单项
-        MyOrder myOrder = orderDao.addMyOrder(Uid, date[0], date[1], date[2], date[3], date[4], String.valueOf(total));
-        Long oid = myOrder.getOid();
-        for(Map<String, Object> item: order){
-            orderItemDao.addOrderItem(String.valueOf(oid), (String) item.get("title"), (String) item.get("author"), (String) item.get("price"), (String) item.get("quantity"));
-        }
-        System.out.println("数据库添加订单成功");
+            long time = System.currentTimeMillis();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+            String[] date = df.format(time).split("-");
+            System.out.println("当前时间：" + df.format(time));
+            // 获取总价并维护每本书的库存
+            long total = 0;
+            for (Map<String, Object> item : order) {
+                total += Long.parseLong((String) item.get("price")) * Long.parseLong((String) item.get("quantity"));
+                bookDao.updateInventory(Long.parseLong((String) item.get("bid")), (String) item.get("quantity"));
+            }
+            System.out.println("库存更新成功");
+            // 添加订单
+            MyOrder myOrder = orderDao.addMyOrder(Uid, date[0], date[1], date[2], date[3], date[4], String.valueOf(total));
+            System.out.println("数据库添加订单成功");
+            Long oid = myOrder.getOid();
+            // 添加订单项
+            for (Map<String, Object> item : order) {
+                orderItemDao.addOrderItem(String.valueOf(oid), (String) item.get("title"), (String) item.get("author"), (String) item.get("price"), (String) item.get("quantity"));
+            }
+            System.out.println("数据库添加订单项成功");
         producerService.sendMessage("Ordered-topic", "Ordered");
 
     }
 
+    @Override
     public Msg getAllOrders()
     {
         List<MyOrder> myOrders = orderDao.getAllMyOrder();
@@ -131,6 +140,7 @@ public class OrderServiceImpl implements OrderService {
         return new Msg(1, "获取全部订单成功", orders);
     }
 
+    @Override
     public Msg search(String keyword) {
         List<Map<String, Object>> all = (List<Map<String, Object>>) getAllOrders().getData();
         List<Map<String, Object>> result = new ArrayList<>();
@@ -160,6 +170,7 @@ public class OrderServiceImpl implements OrderService {
         return new Msg(1, "搜索成功", result);
     }
 
+    @Override
     public Msg searchMy(String keyword, String Uid) {
         List<Map<String, Object>> all = (List<Map<String, Object>>) getOrders(Uid).getData();
         List<Map<String, Object>> result = new ArrayList<>();

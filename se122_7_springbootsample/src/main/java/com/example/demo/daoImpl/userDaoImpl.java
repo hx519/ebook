@@ -18,10 +18,12 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     private UserPasswordRepository userPasswordRepository;
 
+    @Override
     public User findUserByUsername(String username){
         return userRepository.findUserByUsername(username);
     }
 
+    @Override
     public void addUser(Map<String, String> input){
         User user = new User();
         user.setUsername(input.get("username"));
@@ -38,14 +40,17 @@ public class UserDaoImpl implements UserDao {
         userPasswordRepository.save(userpassword);
     }
 
+    @Override
     public List<User> getAllUsers(){
         return userRepository.findAll();
     }
 
+    @Override
     public User findUserByUid(Long uid){
         return userRepository.findUserByUid(uid);
     }
 
+    @Override
     public boolean changeMode(String uid){
         User user = userRepository.findUserByUid(Long.parseLong(uid));
         if(user.getMode().equals("user")){
@@ -58,6 +63,7 @@ public class UserDaoImpl implements UserDao {
         return true;
     }
 
+    @Override
     public UserPassword findUserPasswordByUsername(String username){
         User user = userRepository.findUserByUsername(username);
         if(user == null){

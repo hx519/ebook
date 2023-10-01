@@ -14,11 +14,13 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private BookDao bookDao;
 
+    @Override
     public Msg getAllBooks(){
         List<Book> books = bookDao.getBooks();
         return new Msg(1, "get all books success", books);
     }
 
+    @Override
     public Msg deleteBook(Long id){
         Book book = bookDao.getBookById(id);
         if(book == null)
@@ -31,6 +33,7 @@ public class BookServiceImpl implements BookService {
             return new Msg(-1, "delete book failed");
     }
 
+    @Override
     public Msg addBook(Map<String, String> book){
         Book book1 = bookDao.getBookByTitle(book.get("title"));
         if(book1 != null)
@@ -43,6 +46,7 @@ public class BookServiceImpl implements BookService {
             return new Msg(-1, "add book failed");
     }
 
+    @Override
     public Msg search(String keyword){
         Book book = bookDao.search(keyword);
         if(book == null)
@@ -51,6 +55,7 @@ public class BookServiceImpl implements BookService {
             return new Msg(1, "search book success", book);
     }
 
+    @Override
     public Msg updateBook(Map<String, String> book, Long id){
         Book book1 = bookDao.getBookById(id);
         if(book1 == null)
@@ -60,6 +65,7 @@ public class BookServiceImpl implements BookService {
         return new Msg(1, "update book success");
     }
 
+    @Override
     public Msg getBook(Long id){
         Book book = bookDao.getBookById(id);
         if(book == null)

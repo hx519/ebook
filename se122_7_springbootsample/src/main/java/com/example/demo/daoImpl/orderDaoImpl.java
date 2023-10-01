@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import com.example.demo.entity.MyOrder;
 import com.example.demo.entity.OrderItem;
+
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
+
 import java.util.HashMap;
 
 @Repository
@@ -23,6 +27,7 @@ public class OrderDaoImpl implements OrderDao {
     @Autowired
     private UserRepository userRepository;
 
+    @Override
     public List<List<OrderItem>> getOrders(String Uid){
         List<List<OrderItem>> list = new ArrayList<>();
         list.clear();
@@ -36,6 +41,7 @@ public class OrderDaoImpl implements OrderDao {
         return list;
     }
 
+    @Override
     public void addOrder(List<Map<String, Object>> order, String Uid){
         Long uid = Long.parseLong(Uid);
         MyOrder myOrder = new MyOrder();
@@ -59,6 +65,8 @@ public class OrderDaoImpl implements OrderDao {
 
     }
 
+    @Override
+    @Transactional
     public MyOrder addMyOrder(String uid, String year, String month, String day, String hour, String minute, String total_price)
     {
         MyOrder myOrder = new MyOrder();
@@ -72,6 +80,7 @@ public class OrderDaoImpl implements OrderDao {
         myOrder.setPrice(total_price);
         myOrder.setUsername(userRepository.findUserByUid(Long.parseLong(uid)).getUsername());
         orderRepository.save(myOrder);
+//         int result = 10 / 0;
         return myOrder;
     }
 
@@ -86,6 +95,7 @@ public class OrderDaoImpl implements OrderDao {
 //        orderItemRepository.save(orderItem);
 //    }
 
+    @Override
     public List<MyOrder> getMyOrder(String Uid)
     {
         Long uid = Long.parseLong(Uid);
@@ -93,6 +103,7 @@ public class OrderDaoImpl implements OrderDao {
         return myOrders;
     }
 
+    @Override
     public List<OrderItem> getOrderItem(String oid)
     {
         Long id = Long.parseLong(oid);
@@ -100,6 +111,7 @@ public class OrderDaoImpl implements OrderDao {
         return orderItems;
     }
 
+    @Override
     public List<MyOrder> getAllMyOrder()
     {
         List<MyOrder> myOrders = orderRepository.findAll();

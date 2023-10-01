@@ -72,5 +72,10 @@ public class OrderController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
+
+    @PostMapping("/testTransaction")
+    public void testTransaction(@RequestBody List<Map<String, Object>> data){
+        orderService.addOrder(data, "2");
+    }
 }
 

@@ -10,6 +10,7 @@ public class TimerServiceImpl implements TimerService {
     private long startTime = 0;
     private boolean isTiming = false;
 
+    @Override
     public void start(){
         if(!isTiming){
             startTime = System.currentTimeMillis();
@@ -18,6 +19,7 @@ public class TimerServiceImpl implements TimerService {
         }
     }
 
+    @Override
     public long stop(){
         if(isTiming){
             isTiming = false;

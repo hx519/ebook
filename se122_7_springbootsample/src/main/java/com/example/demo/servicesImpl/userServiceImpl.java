@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
+    @Override
     public Msg check(String username, String password){
         UserPassword userPassword = userDao.findUserPasswordByUsername(username);
         if(userPassword == null)
@@ -26,6 +27,7 @@ public class UserServiceImpl implements UserService {
         return new Msg(1, "login success", user);
     }
 
+    @Override
     public Msg register(Map<String, String> input){
         User user = userDao.findUserByUsername(input.get("username"));
         if(user != null)
@@ -34,11 +36,13 @@ public class UserServiceImpl implements UserService {
         return new Msg(1, "register success");
     }
 
+    @Override
     public Msg getAllUsers(){
         List<User> users = userDao.getAllUsers();
         return new Msg(1, "get all users success", users);
     }
 
+    @Override
     public Msg changeMode(String uid){
         boolean result = userDao.changeMode(uid);
         if(result)
@@ -47,6 +51,7 @@ public class UserServiceImpl implements UserService {
             return new Msg(-1, "change mode failed");
     }
 
+    @Override
     public Msg logout() {
         return new Msg(1, "logout success");
     }
