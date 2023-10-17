@@ -84,7 +84,25 @@ export function BookDetail (props) {
 
         console.log( state)
 
-        const info = state.info;
+        // let info = state.info;
+        // 获取书籍信息
+        const [info, setInfo] = useState({});  
+        React.useEffect(() => {
+            fetch(`http://localhost:8080/getBook/${state.info.bid}`, {
+                credentials: 'include',
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                setInfo(data.data);
+            })
+            .catch((err) => {
+                console.error(err.message)
+            })
+        }, []);
 
         const navigate = useNavigate();
 

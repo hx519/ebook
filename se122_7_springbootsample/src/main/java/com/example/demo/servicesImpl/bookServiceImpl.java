@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.entity.Book;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +19,16 @@ public class BookServiceImpl implements BookService {
     @Override
     public Msg getAllBooks(){
         List<Book> books = bookDao.getBooks();
-        return new Msg(1, "get all books success", books);
+        List<Map<String, Object>> result = new ArrayList<>();
+        for(Book book: books){
+            Map<String, Object> map = new HashMap<>();
+            map.put("bid", book.getBid());
+            map.put("title", book.getTitle());
+            map.put("price", book.getPrice());
+            map.put("image", book.getImage());
+            result.add(map);
+        }
+        return new Msg(1, "get all books success", result);
     }
 
     @Override
