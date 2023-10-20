@@ -12,6 +12,5 @@ public interface BookDao {
     void updateInventory(Long bid, String quantity);
     Book search(String keyword);
     void updateBook(Map<String, String> book, Long id);
-    Book getBook(Long id);
     Book getBookByTitle(String title);
 }
