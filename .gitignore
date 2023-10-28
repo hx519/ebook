@@ -4,3 +4,13 @@ se122_7_springbootsample/src/main/resources/
 demo/.idea/
 demo/.vscode/
 demo/.node_modules/
+.idea/
+authorService/.idea/
+authorService/.mvn/
+authorService/src/main/resources/
+gateway/.idea/
+gateway/.mvn/
+gateway/src/main/resources/
+eureka/.idea/
+eureka/.mvn/
+eureka/src/main/resources/
