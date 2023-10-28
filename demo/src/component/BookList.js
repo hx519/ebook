@@ -83,11 +83,36 @@ function addBook() {
 })
 }
 
+function showAuthor(title) {
+    fetch('http://localhost:8081/author/getAuthor/' + title, {
+        method: 'GET',
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.data);
+            if(data.status === 1){
+                Modal.success({
+                    title: '本书作者是:' + data.data,});
+            }
+            else{
+                Modal.error({
+                    title: '查询失败',
+                    content: data.message,
+                });
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        }   
+    );
+}
+
+
 export class BookList extends React.Component {
     
     constructor(props) {
         super(props);
-        this.state = {books: [], searchValue: '' };
+        this.state = {books: [], searchValue: '', authorSearchValue: '' };
     }
 
     componentDidMount() {
@@ -103,6 +128,10 @@ export class BookList extends React.Component {
         this.setState({searchValue: event.target.value})
     }
 
+    handleAuthorSearch = () => {
+        showAuthor(this.state.authorSearchValue);
+    }
+
     render() {
         const filteredBooks = this.state.books.filter(book => book.title.includes(this.state.searchValue))
 
@@ -110,6 +139,13 @@ export class BookList extends React.Component {
             return (
                 <div>
                     <Input placeholder="搜索书名" style={{marginBottom: '20px'}} onChange={this.handleSearch}/>
+                    <Input.Search
+                        placeholder="搜索作者"
+                        value={this.state.authorSearchValue}
+                        onChange={e => this.setState({ authorSearchValue: e.target.value })}
+                        onSearch={this.handleAuthorSearch} // 按下回车键时触发搜索
+                        style={{ marginBottom: '20px' }}
+                    />
                     <List id='bookList'
                         grid={{gutter: 10, column: 4}}
                         dataSource={filteredBooks}
@@ -132,6 +168,13 @@ export class BookList extends React.Component {
         return (
             <div>
                 <Input placeholder="搜索书名" style={{marginBottom: '20px'}} onChange={this.handleSearch}/>
+                <Input.Search
+                        placeholder="搜索作者"
+                        value={this.state.authorSearchValue}
+                        onChange={e => this.setState({ authorSearchValue: e.target.value })}
+                        onSearch={this.handleAuthorSearch} // 按下回车键时触发搜索
+                        style={{ marginBottom: '20px' }}
+                    />
                 <List id='bookList'
                     grid={{gutter: 10, column: 4}}
                     dataSource={filteredBooks}

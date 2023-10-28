@@ -1,4 +1,4 @@
-spring.application.name=book-service
+spring.application.name=author-service
 
 spring.datasource.url=jdbc:mysql://localhost:3306/bookstore
 spring.datasource.username=root
@@ -12,3 +12,4 @@ eureka.client.fetchRegistry=true
 eureka.client.serviceUrl.defaultZone=http://localhost:8040/eureka
 
 server.port=11130
+
