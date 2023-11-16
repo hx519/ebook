@@ -22,24 +22,30 @@ public class ConsumerService {
     @Resource
     private WebSocket webSocket;
 
-//    @KafkaListener(topics = "PlaceOrder-topic", groupId = "my-group")
-//    public void receivePlaceOrderMessage(String message) throws JsonProcessingException {
-//        // 处理接收到的消息
-//        System.out.println("Received message: " + message);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        Map<String, Object> data = objectMapper.readValue(message, new TypeReference<Map<String, Object>>() {});
-//        List<Map<String, Object>> book = (List<Map<String, Object>>) data.get("book");
-//        String Uid = (String) data.get("uid");
+    @KafkaListener(topics = "PlaceOrder-topic", groupId = "my-group")
+    public void receivePlaceOrderMessage(String message) throws JsonProcessingException {
+        // 处理接收到的消息
+        System.out.println("Received message: " + message);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> data = objectMapper.readValue(message, new TypeReference<Map<String, Object>>() {});
+        List<Map<String, Object>> book = (List<Map<String, Object>>) data.get("book");
+        String Uid = (String) data.get("uid");
 //        orderService.addOrder(book, Uid);
-//    }
-//
-//    @KafkaListener(topics = "Ordered-topic", groupId = "my-group")
-//    public void receiveOrderedMessage(String message) throws JsonProcessingException {
-//        // 处理接收到的消息
-//        System.out.println("Received message: " + message);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        Map<String, Object> data = objectMapper.readValue(message, new TypeReference<Map<String, Object>>() {});
-//        webSocket.sendOneMessage((String) data.get("uid"), message);
-//    }
+        try {
+            orderService.addOrder(book, Uid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            webSocket.sendOneMessage(Uid, "{\"status\":-1,\"message\":\"下订单失败\"}");
+        }
+    }
+
+    @KafkaListener(topics = "Ordered-topic", groupId = "my-group")
+    public void receiveOrderedMessage(String message) throws JsonProcessingException {
+        // 处理接收到的消息
+        System.out.println("Received message: " + message);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> data = objectMapper.readValue(message, new TypeReference<Map<String, Object>>() {});
+        webSocket.sendOneMessage((String) data.get("uid"), message);
+    }
 }
 

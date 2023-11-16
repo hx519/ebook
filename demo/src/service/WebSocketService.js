@@ -1,4 +1,4 @@
-import { Modal } from 'antd';
+import { Modal, message } from 'antd';
 
 export const createWebSocket = (userId) => {
     // 创建WebSocket连接
@@ -18,6 +18,14 @@ export const createWebSocket = (userId) => {
     socket.onmessage = (event) => {
         const receivedMessage = JSON.parse(event.data);
         console.log('收到来自服务器的:', receivedMessage);
+        if(receivedMessage.status === -1){
+            Modal.error({
+                title: '订单提交失败',
+                content: receivedMessage.message,
+            });
+            socket.close();
+            return;
+        }
         Modal.success({
             title: '订单提交成功',
             content: '订单时间：' + receivedMessage.time + '\n 订单总价：' + receivedMessage.price + '元'

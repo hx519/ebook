@@ -93,6 +93,9 @@ public class OrderServiceImpl implements OrderService {
                 bookDao.updateInventory(Long.parseLong((String) item.get("bid")), (String) item.get("quantity"));
             }
             System.out.println("库存更新成功");
+
+//            int year = 10 / 0;
+
             // 添加订单
             MyOrder myOrder = orderDao.addMyOrder(Uid, date[0], date[1], date[2], date[3], date[4], String.valueOf(total));
             System.out.println("数据库添加订单成功");
