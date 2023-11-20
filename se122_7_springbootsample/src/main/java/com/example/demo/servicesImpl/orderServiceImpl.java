@@ -1,8 +1,10 @@
 package com.example.demo.servicesImpl;
 
 import com.example.demo.dao.BookDao;
+import com.example.demo.dao.MongoOrderDao;
 import com.example.demo.dao.OrderDao;
 import com.example.demo.dao.OrderItemDao;
+import com.example.demo.entity.MongoOrder;
 import com.example.demo.kafka.ProducerService;
 import com.example.demo.services.OrderService;
 import com.example.demo.utils.Msg;
@@ -35,6 +37,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderItemDao orderItemDao;
     @Autowired
     private ProducerService producerService;
+    @Autowired
+    private MongoOrderDao mongoOrderDao;
 
     @Override
     public Msg receiveOrder(Map<String, Object> data) throws JsonProcessingException {
@@ -48,80 +52,155 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Msg getOrders(String Uid)
     {
-        List<MyOrder> myOrders = orderDao.getMyOrder(Uid);
-        List<Map<String, Object>> orders = new ArrayList<>();
-        for (MyOrder myOrder: myOrders){
-            Map<String, Object> order = new java.util.HashMap<>();
-            order.put("oid", myOrder.getOid());
-            order.put("year", myOrder.getYear());
-            order.put("month", myOrder.getMonth());
-            order.put("day", myOrder.getDay());
-            order.put("hour", myOrder.getHour());
-            order.put("minute", myOrder.getMinute());
-            order.put("price", myOrder.getPrice());
-            order.put("username", myOrder.getUsername());
+//        List<MyOrder> myOrders = orderDao.getMyOrder(Uid);
+//        List<Map<String, Object>> orders = new ArrayList<>();
+//        for (MyOrder myOrder: myOrders){
+//            Map<String, Object> order = new java.util.HashMap<>();
+//            order.put("oid", myOrder.getOid());
+//            order.put("year", myOrder.getYear());
+//            order.put("month", myOrder.getMonth());
+//            order.put("day", myOrder.getDay());
+//            order.put("hour", myOrder.getHour());
+//            order.put("minute", myOrder.getMinute());
+//            order.put("price", myOrder.getPrice());
+//            order.put("username", myOrder.getUsername());
+//
+//            List<OrderItem> orderItems = orderDao.getOrderItem(String.valueOf(myOrder.getOid()));
+//            List<Map<String, Object>> items = new ArrayList<>();
+//
+//            for (OrderItem orderItem: orderItems){
+//                Map<String, Object> item = new java.util.HashMap<>();
+//                item.put("title", orderItem.getTitle());
+//                item.put("author", orderItem.getAuthor());
+//                item.put("price", orderItem.getPrice());
+//                item.put("quantity", orderItem.getQuantity());
+//                items.add(item);
+//            }
+//
+//            order.put("items", items);
+//            orders.add(order);
+//        }
+//        return new Msg(1, "获取订单成功", orders);
 
-            List<OrderItem> orderItems = orderDao.getOrderItem(String.valueOf(myOrder.getOid()));
-            List<Map<String, Object>> items = new ArrayList<>();
+            List<MongoOrder> mongoOrders = mongoOrderDao.getMyOrder(Uid);
+            List<Map<String, Object>> orders = new ArrayList<>();
+            for (MongoOrder mongoOrder: mongoOrders) {
+                Map<String, Object> order = new java.util.HashMap<>();
+                String time = mongoOrder.getTime();
+                String[] date = time.split(" ");
+                String[] ymd = date[0].split("-");
+                String[] hms = date[1].split(":");
+                order.put("oid", mongoOrder.getId());
+                order.put("year", ymd[0]);
+                order.put("month", ymd[1]);
+                order.put("day", ymd[2]);
+                order.put("hour", hms[0]);
+                order.put("minute", hms[1]);
+                order.put("price", mongoOrder.getPrice());
+                order.put("username", mongoOrder.getUsername());
 
-            for (OrderItem orderItem: orderItems){
-                Map<String, Object> item = new java.util.HashMap<>();
-                item.put("title", orderItem.getTitle());
-                item.put("author", orderItem.getAuthor());
-                item.put("price", orderItem.getPrice());
-                item.put("quantity", orderItem.getQuantity());
-                items.add(item);
+                List<Map<String, String>> orderItems = mongoOrder.getOrderItems();
+                List<Map<String, Object>> items = new ArrayList<>();
+
+                for (Map<String, String> orderItem : orderItems) {
+                    Map<String, Object> item = new java.util.HashMap<>();
+                    item.put("title", orderItem.get("title"));
+                    item.put("author", orderItem.get("author"));
+                    item.put("price", orderItem.get("price"));
+                    item.put("quantity", orderItem.get("quantity"));
+                    items.add(item);
+                }
+
+                order.put("items", items);
+                orders.add(order);
             }
-
-            order.put("items", items);
-            orders.add(order);
-        }
-        return new Msg(1, "获取订单成功", orders);
+            return new Msg(1, "获取订单成功", orders);
     }
 
     @Override
     @Transactional
-    public void addOrder(List<Map<String, Object>> order, String Uid) throws JsonProcessingException {
-            long time = System.currentTimeMillis();
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
-            String[] date = df.format(time).split("-");
-            System.out.println("当前时间：" + df.format(time));
-            // 获取总价并维护每本书的库存
-            long total = 0;
-            for (Map<String, Object> item : order) {
-                total += Long.parseLong((String) item.get("price")) * Long.parseLong((String) item.get("quantity"));
-                bookDao.updateInventory(Long.parseLong((String) item.get("bid")), (String) item.get("quantity"));
+    public void addOrder(List<Map<String, String>> order, String Uid) throws JsonProcessingException {
+//            long time = System.currentTimeMillis();
+//            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+//            String[] date = df.format(time).split("-");
+//            System.out.println("当前时间：" + df.format(time));
+//            // 获取总价并维护每本书的库存
+//            long total = 0;
+//            for (Map<String, Object> item : order) {
+//                total += Long.parseLong((String) item.get("price")) * Long.parseLong((String) item.get("quantity"));
+//                bookDao.updateInventory(Long.parseLong((String) item.get("bid")), (String) item.get("quantity"));
+//            }
+//            System.out.println("库存更新成功");
+//
+////            int year = 10 / 0;
+//
+//            // 添加订单
+//            MyOrder myOrder = orderDao.addMyOrder(Uid, date[0], date[1], date[2], date[3], date[4], String.valueOf(total));
+//            System.out.println("数据库添加订单成功");
+//            Long oid = myOrder.getOid();
+//            // 添加订单项
+//            for (Map<String, Object> item : order) {
+//                orderItemDao.addOrderItem(String.valueOf(oid), (String) item.get("title"), (String) item.get("author"), (String) item.get("price"), (String) item.get("quantity"));
+//            }
+//            System.out.println("数据库添加订单项成功");
+//
+//            // 发送消息
+//        Map<String, Object> data = new java.util.HashMap<>();
+//        data.put("uid", Uid);
+////        MyOrder newOrder = orderDao.getMyOrder(String.valueOf(oid)).get(0);
+//        MyOrder newOrder = myOrder;
+//        data.put("time", newOrder.getYear() + "-" + newOrder.getMonth() + "-" + newOrder.getDay() + " " + newOrder.getHour() + ":" + newOrder.getMinute());
+//        data.put("price", newOrder.getPrice());
+//        List<OrderItem> orderItems = orderDao.getOrderItem(String.valueOf(oid));
+//        List<Map<String, Object>> items = new ArrayList<>();
+//        for (OrderItem orderItem: orderItems){
+//            Map<String, Object> item = new java.util.HashMap<>();
+//            item.put("title", orderItem.getTitle());
+//            item.put("author", orderItem.getAuthor());
+//            item.put("price", orderItem.getPrice());
+//            item.put("quantity", orderItem.getQuantity());
+//            items.add(item);
+//        }
+//        data.put("items", items);
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        String jsonString = objectMapper.writeValueAsString(data);
+//        producerService.sendMessage("Ordered-topic", jsonString);
+
+        long time = System.currentTimeMillis();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String orderTime = df.format(time);
+        // 获取总价并维护每本书的库存
+        long total = 0;
+        for (Map<String, String> item : order) {
+            total += Long.parseLong((String) item.get("price")) * Long.parseLong((String) item.get("quantity"));
+            if(!bookDao.updateInventory(Long.parseLong((String) item.get("bid")), (String) item.get("quantity"))) {
+                System.out.println("库存更新失败");
+                throw new RuntimeException("库存更新失败");
             }
-            System.out.println("库存更新成功");
+        }
+        System.out.println("库存更新成功");
 
-//            int year = 10 / 0;
+        // 添加订单
+        MongoOrder mongoOrder = mongoOrderDao.addOrder(order, Uid, String.valueOf(total), orderTime);
+        if(mongoOrder == null) {
+            System.out.println("数据库添加订单失败");
+            throw new RuntimeException("数据库添加订单失败");
+        }
+        System.out.println("数据库添加订单成功");
 
-            // 添加订单
-            MyOrder myOrder = orderDao.addMyOrder(Uid, date[0], date[1], date[2], date[3], date[4], String.valueOf(total));
-            System.out.println("数据库添加订单成功");
-            Long oid = myOrder.getOid();
-            // 添加订单项
-            for (Map<String, Object> item : order) {
-                orderItemDao.addOrderItem(String.valueOf(oid), (String) item.get("title"), (String) item.get("author"), (String) item.get("price"), (String) item.get("quantity"));
-            }
-            System.out.println("数据库添加订单项成功");
-
-            // 发送消息
+        // 发送消息
         Map<String, Object> data = new java.util.HashMap<>();
-        data.put("uid", Uid);
-//        MyOrder newOrder = orderDao.getMyOrder(String.valueOf(oid)).get(0);
-        MyOrder newOrder = myOrder;
-        data.put("time", newOrder.getYear() + "-" + newOrder.getMonth() + "-" + newOrder.getDay() + " " + newOrder.getHour() + ":" + newOrder.getMinute());
-        data.put("price", newOrder.getPrice());
-        List<OrderItem> orderItems = orderDao.getOrderItem(String.valueOf(oid));
-        List<Map<String, Object>> items = new ArrayList<>();
-        for (OrderItem orderItem: orderItems){
-            Map<String, Object> item = new java.util.HashMap<>();
-            item.put("title", orderItem.getTitle());
-            item.put("author", orderItem.getAuthor());
-            item.put("price", orderItem.getPrice());
-            item.put("quantity", orderItem.getQuantity());
-            items.add(item);
+        data.put("uid", mongoOrder.getUid());
+        data.put("time", mongoOrder.getTime());
+        data.put("price", mongoOrder.getPrice());
+        List<Map<String, String>> items = new ArrayList<>();
+        for (Map<String, String> item : mongoOrder.getOrderItems()) {
+            Map<String, String> newItem = new java.util.HashMap<>();
+            newItem.put("title", item.get("title"));
+            newItem.put("author", item.get("author"));
+            newItem.put("price", item.get("price"));
+            newItem.put("quantity", item.get("quantity"));
+            items.add(newItem);
         }
         data.put("items", items);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -133,28 +212,61 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Msg getAllOrders()
     {
-        List<MyOrder> myOrders = orderDao.getAllMyOrder();
+//        List<MyOrder> myOrders = orderDao.getAllMyOrder();
+//        List<Map<String, Object>> orders = new ArrayList<>();
+//        for (MyOrder myOrder: myOrders){
+//            Map<String, Object> order = new java.util.HashMap<>();
+//            order.put("oid", myOrder.getOid());
+//            order.put("year", myOrder.getYear());
+//            order.put("month", myOrder.getMonth());
+//            order.put("day", myOrder.getDay());
+//            order.put("hour", myOrder.getHour());
+//            order.put("minute", myOrder.getMinute());
+//            order.put("price", myOrder.getPrice());
+//            order.put("username", myOrder.getUsername());
+//
+//            List<OrderItem> orderItems = orderDao.getOrderItem(String.valueOf(myOrder.getOid()));
+//            List<Map<String, Object>> items = new ArrayList<>();
+//
+//            for (OrderItem orderItem: orderItems){
+//                Map<String, Object> item = new java.util.HashMap<>();
+//                item.put("title", orderItem.getTitle());
+//                item.put("author", orderItem.getAuthor());
+//                item.put("price", orderItem.getPrice());
+//                item.put("quantity", orderItem.getQuantity());
+//                items.add(item);
+//            }
+//
+//            order.put("items", items);
+//            orders.add(order);
+//        }
+//        return new Msg(1, "获取全部订单成功", orders);
+        List<MongoOrder> mongoOrders = mongoOrderDao.getAllOrder();
         List<Map<String, Object>> orders = new ArrayList<>();
-        for (MyOrder myOrder: myOrders){
+        for (MongoOrder mongoOrder: mongoOrders) {
             Map<String, Object> order = new java.util.HashMap<>();
-            order.put("oid", myOrder.getOid());
-            order.put("year", myOrder.getYear());
-            order.put("month", myOrder.getMonth());
-            order.put("day", myOrder.getDay());
-            order.put("hour", myOrder.getHour());
-            order.put("minute", myOrder.getMinute());
-            order.put("price", myOrder.getPrice());
-            order.put("username", myOrder.getUsername());
+            String time = mongoOrder.getTime();
+            String[] date = time.split(" ");
+            String[] ymd = date[0].split("-");
+            String[] hms = date[1].split(":");
+            order.put("oid", mongoOrder.getId());
+            order.put("year", ymd[0]);
+            order.put("month", ymd[1]);
+            order.put("day", ymd[2]);
+            order.put("hour", hms[0]);
+            order.put("minute", hms[1]);
+            order.put("price", mongoOrder.getPrice());
+            order.put("username", mongoOrder.getUsername());
 
-            List<OrderItem> orderItems = orderDao.getOrderItem(String.valueOf(myOrder.getOid()));
+            List<Map<String, String>> orderItems = mongoOrder.getOrderItems();
             List<Map<String, Object>> items = new ArrayList<>();
 
-            for (OrderItem orderItem: orderItems){
+            for (Map<String, String> orderItem : orderItems) {
                 Map<String, Object> item = new java.util.HashMap<>();
-                item.put("title", orderItem.getTitle());
-                item.put("author", orderItem.getAuthor());
-                item.put("price", orderItem.getPrice());
-                item.put("quantity", orderItem.getQuantity());
+                item.put("title", orderItem.get("title"));
+                item.put("author", orderItem.get("author"));
+                item.put("price", orderItem.get("price"));
+                item.put("quantity", orderItem.get("quantity"));
                 items.add(item);
             }
 

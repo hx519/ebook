@@ -88,8 +88,10 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     @Transactional
-    public void updateInventory(Long bid, String quantity){
+    public boolean updateInventory(Long bid, String quantity){
         Book book = bookRepository.getBookByBid(bid);
+        if(Integer.parseInt(book.getInventory()) < Integer.parseInt(quantity))
+            return false;
         book.setInventory(String.valueOf(Integer.parseInt(book.getInventory()) - Integer.parseInt(quantity)));
         bookRepository.save(book);
         Object redisGet = redisUtil.get("book" + bid);
@@ -97,6 +99,7 @@ public class BookDaoImpl implements BookDao {
             redisUtil.set("book" + bid, JSON.toJSONString(book));
             System.out.println("redis set book" + bid);
         }
+        return true;
     }
 
     @Override

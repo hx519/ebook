@@ -100,7 +100,7 @@ const Cart = () => {
                     title: item.title,
                     author: item.author,
                     price: item.price,
-                    isbn: item.isbn,
+                    // isbn: item.isbn,
                     quantity: bookQuantities.find(q => q.id === item.id).quantity.toString(),
                 }));
                 const uid = localStorage.getItem("uid");

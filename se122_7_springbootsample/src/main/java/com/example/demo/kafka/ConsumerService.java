@@ -28,7 +28,7 @@ public class ConsumerService {
         System.out.println("Received message: " + message);
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> data = objectMapper.readValue(message, new TypeReference<Map<String, Object>>() {});
-        List<Map<String, Object>> book = (List<Map<String, Object>>) data.get("book");
+        List<Map<String, String>> book = (List<Map<String, String>>) data.get("book");
         String Uid = (String) data.get("uid");
 //        orderService.addOrder(book, Uid);
         try {

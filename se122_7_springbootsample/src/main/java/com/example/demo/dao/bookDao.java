@@ -9,7 +9,7 @@ public interface BookDao {
     Book getBookById(Long id);
     void deleteBook(Long id);
     void addBook(Map<String, String> book);
-    void updateInventory(Long bid, String quantity);
+    boolean updateInventory(Long bid, String quantity);
     Book search(String keyword);
     void updateBook(Map<String, String> book, Long id);
     Book getBookByTitle(String title);
