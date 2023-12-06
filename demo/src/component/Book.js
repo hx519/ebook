@@ -25,7 +25,7 @@ export class Book extends React.Component {
                 cover={<img alt="image" src={info.image} className={"bookImg"} style={{height:270}}/> }
                 //onClick={this.showBookDetails.bind(this, info.bookId)}
             >
-                <Meta title={info.title} description={'￥' + info.price}/>
+                <Meta title={info.title} description={'￥' + info.price + '   ' + info.type} style={{height:90}}/>
             </Card>
             </Link>
         );

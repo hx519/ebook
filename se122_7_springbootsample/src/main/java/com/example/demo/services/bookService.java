@@ -13,4 +13,6 @@ public interface BookService {
     Msg search(String keyword);
     Msg updateBook(Map<String, String> book, Long id);
     Msg getBook(Long id);
+    Msg getBookTypeNames();
+    Msg getBookByType(String typeName);
 }
