@@ -15,6 +15,7 @@ import Register from './view/Register';
 import { Layout, theme, Menu } from 'antd';
 import StaticView from './view/StaticView';
 
+
 function App() {
 
 

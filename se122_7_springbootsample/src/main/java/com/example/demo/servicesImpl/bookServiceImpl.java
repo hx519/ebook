@@ -65,8 +65,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Msg search(String keyword){
-        Book book = bookDao.search(keyword);
-        if(book == null)
+        Book res = bookDao.search(keyword);
+        List<Book> book = new ArrayList<>();
+        book.add(res);
+        if(res == null)
             return new Msg(-1, "book not exist");
         else
             return new Msg(1, "search book success", book);
@@ -124,5 +126,10 @@ public class BookServiceImpl implements BookService {
             result.add(map);
         }
         return new Msg(1, "get book by type success", result);
+    }
+
+    @Override
+    public Book getBookByTitle(String title){
+        return bookDao.getBookByTitle(title);
     }
 }

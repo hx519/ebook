@@ -1,8 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, List, Modal, Select } from 'antd';
 import { Book } from './Book';
+import {useLazyQuery, useQuery} from '@apollo/client';
+import { gql } from 'graphql-tag';
 
 const { Option } = Select;
+
+// changed
+const GET_BOOK_BY_TITLE = gql`
+  query GetBookByTitle($title: String!) {
+    getBookByGraphql(title: $title) {
+      bid
+      title
+      author
+      type
+      price
+      inventory
+      description
+      isbn
+      image
+    }
+  }
+`;
 
 export const BookList = () => {
     const [books, setBooks] = useState([]);
@@ -10,6 +29,8 @@ export const BookList = () => {
     const [authorSearchValue, setAuthorSearchValue] = useState('');
     const [selectedType, setSelectedType] = useState('');
     const [allType, setAllType] = useState([]);
+
+    const [getBookByGraphql, { loading, data }] = useLazyQuery(GET_BOOK_BY_TITLE);
 
     const addBook = () => {
         if(!localStorage.getItem('mode')){
@@ -115,6 +136,40 @@ export const BookList = () => {
     );
     };
 
+    const getBookByTitle = (title) => {
+        if(!title){
+            fetch('http://localhost:8080/bookList', { credentials: 'include' })
+            .then(response => response.json())
+            .then((data) => {
+                console.log("here")
+                setBooks(data.data);
+            })
+            .catch(error => console.log("error", error));
+            return;
+        }
+        getBookByGraphql({ variables: { title } });
+        console.log("searchValue", searchValue);
+        if(data && data.getBookByGraphql){
+            setSearchValue(title);
+            console.log("searchValue", searchValue);
+            // 把获取到的书籍包装成list
+            let list = [];
+            list.push(data.getBookByGraphql);
+            setBooks(list);
+        }
+        // fetch('http://localhost:8080/getBookByTitle/' + title, { credentials: 'include' })
+        //     .then(response => response.json())
+        //     .then((data) => {
+        //         setSearchValue(title);
+        //         if(data.status === 1){
+        //             // setSearchValue(title);
+        //             setBooks(data.data);
+        //             console.log("searchValue", searchValue);
+        //         }
+        //     })
+        //     .catch(error => console.log("error", error));
+    };
+
     const getRelatedBooks = (type) => {
         fetch('http://localhost:8080/getBookByType/' + type, { credentials: 'include' })
             .then(response => response.json())
@@ -166,10 +221,12 @@ export const BookList = () => {
         return (
             <div>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Input
+                    <Input.Search
                         placeholder="搜索书名"
                         style={{ marginRight: '20px' }}
+                        value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
+                        onSearch={getBookByTitle}
                     />
                     <Input.Search
                         placeholder="搜索作者"
@@ -196,28 +253,11 @@ export const BookList = () => {
                     </Button>
                 </div>
                 <br />
-                {/* <Input placeholder="搜索书名" style={{ marginBottom: '20px' }} onChange={(e) => setSearchValue(e.target.value)} />
-                <Input.Search
-                    placeholder="搜索作者"
-                    value={authorSearchValue}
-                    onChange={(e) => setAuthorSearchValue(e.target.value)}
-                    onSearch={showAuthor} // 按下回车键时触发搜索
-                    style={{ marginBottom: '20px' }}
-                />
-                <Select
-                    placeholder="选择书籍类型"
-                    style={{ width: 200, marginBottom: '20px' }}
-                    onChange={handleTypeChange}
-                    value={selectedType}
-                >
-                    {allType.map(type => (
-                        <Option key={type} value={type}>{type}</Option>
-                    ))}
-                </Select> */}
                 <List
                     id='bookList'
                     grid={{ gutter: 10, column: 4 }}
                     dataSource={filteredBooks}
+                    // dataSource={books}
                     pagination={false}
                     renderItem={item => (
                         <List.Item >
@@ -225,11 +265,6 @@ export const BookList = () => {
                         </List.Item>
                     )}
                 />
-                {/* <Button onClick={addBook}
-                    style={{width: '100%', height: '100px', fontSize: '30px', marginTop: '20px'}}   
-                >
-                    新增书籍
-                </Button> */}
             </div>
         );
     }
@@ -237,10 +272,12 @@ export const BookList = () => {
     return (
         <div>
             <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Input
+                <Input.Search
                     placeholder="搜索书名"
+                    value={searchValue}
                     style={{ marginRight: '20px' }}
                     onChange={(e) => setSearchValue(e.target.value)}
+                    onSearch={getBookByTitle}
                 />
                 <Input.Search
                     placeholder="搜索作者"
@@ -261,28 +298,11 @@ export const BookList = () => {
                 </Select>
             </div>
             <br />
-            {/* <Input placeholder="搜索书名" style={{ marginBottom: '20px' }} onChange={(e) => setSearchValue(e.target.value)} />
-            <Input.Search
-                placeholder="搜索作者"
-                value={authorSearchValue}
-                onChange={(e) => setAuthorSearchValue(e.target.value)}
-                onSearch={showAuthor} // 按下回车键时触发搜索
-                style={{ marginBottom: '20px' }}
-            />
-            <Select
-                placeholder="选择书籍类型"
-                style={{ width: 200, marginBottom: '20px' }}
-                onChange={handleTypeChange}
-                value={selectedType}
-            >
-                {allType.map(type => (
-                    <Option key={type} value={type}>{type}</Option>
-                ))}
-            </Select> */}
             <List
                 id='bookList'
                 grid={{ gutter: 10, column: 4 }}
                 dataSource={filteredBooks}
+                // dataSource={books}
                 pagination={false}
                 renderItem={item => (
                     <List.Item >

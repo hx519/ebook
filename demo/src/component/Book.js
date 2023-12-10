@@ -14,7 +14,7 @@ export class Book extends React.Component {
 
     render() {
         const {info} = this.props;
-        console.log(info)
+        // console.log(info)
         
         return (
             <Link to="/bookDetails" state={{info: info}}>

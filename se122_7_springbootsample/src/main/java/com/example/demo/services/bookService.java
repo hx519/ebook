@@ -15,4 +15,5 @@ public interface BookService {
     Msg getBook(Long id);
     Msg getBookTypeNames();
     Msg getBookByType(String typeName);
+    Book getBookByTitle(String title);
 }

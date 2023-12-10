@@ -8,6 +8,9 @@ import com.example.demo.redis.RedisUtil;
 import com.example.demo.repository.BookTypeRepository;
 import com.example.demo.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.neo4j.repository.query.Query;
+//import org.springframework.graphql.data.method.annotation.Argument;
+//import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -216,6 +219,30 @@ public class BookController {
 
         return ResponseEntity.ok(new Msg(1, "neo4j init success"));
     }
+
+    @RequestMapping("/getBookByTitle/{name}")
+    public ResponseEntity<Msg> getBookByTitle(@PathVariable String name){
+        Msg result = bookService.search(name);
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
+
+    }
+
+//    @QueryMapping
+//    public Book getBookByGraphql(@Argument String title){
+//        Msg result = bookService.search(title);
+//        if(result.getStatus() >= 0){
+//            List<Book> books = (List<Book>) result.getData();
+//            return books.get(0);
+//        }
+//        else{
+//            return null;
+//        }
+//    }
 
 
 }
