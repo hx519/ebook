@@ -3,6 +3,7 @@ import { Button, Input, List, Modal, Select } from 'antd';
 import { Book } from './Book';
 import {useLazyQuery, useQuery} from '@apollo/client';
 import { gql } from 'graphql-tag';
+import { json } from 'react-router';
 
 const { Option } = Select;
 
@@ -29,6 +30,8 @@ export const BookList = () => {
     const [authorSearchValue, setAuthorSearchValue] = useState('');
     const [selectedType, setSelectedType] = useState('');
     const [allType, setAllType] = useState([]);
+    const [descriptionSearchValue, setDescriptionSearchValue] = useState('');
+    const [descriptionSearchResult, setDescriptionSearchResult] = useState([]);
 
     const [getBookByGraphql, { loading, data }] = useLazyQuery(GET_BOOK_BY_TITLE);
 
@@ -136,6 +139,55 @@ export const BookList = () => {
     );
     };
 
+    const showDescriptionSearch = (title) => {
+        if(title === '' || title === "0"){
+            fetch('http://localhost:8080/getWordCount', {
+            method: 'GET',
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data.data);
+                if(data.status === 1){
+                    Modal.success({
+                        // data.data是一个map，需要转换成字符串
+                        title: '本书描述关键词是:' + JSON.stringify(data.data),});
+                }
+                else{
+                    Modal.error({
+                        title: '查询失败',
+                        content: data.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            }
+        );
+            return;
+        }
+        fetch('http://localhost:8080/getWordCountByKeyword/' + title, {
+        method: 'GET',
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.data);
+            if(data.status === 1){
+                Modal.success({
+                    title: '本书描述是:' + json.stringify(data.data)});
+            }
+            else{
+                Modal.error({
+                    title: '查询失败',
+                    content: data.message,
+                });
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        }
+    );
+    };
+
     const getBookByTitle = (title) => {
         if(!title){
             fetch('http://localhost:8080/bookList', { credentials: 'include' })
@@ -168,6 +220,34 @@ export const BookList = () => {
         //         }
         //     })
         //     .catch(error => console.log("error", error));
+    };
+
+    const createBookDescriptionTxt = () => {
+        fetch('http://localhost:8080/createBookDescriptionTxt', { credentials: 'include' })
+            .then(response => response.json())
+            .then((data) => {
+                console.log(data.message);
+                if(data.status === 1){
+                    Modal.success({
+                        title: '生成成功',
+                        content: data.message,
+                    });
+                }
+                else{
+                    Modal.error({
+                        title: '生成失败',
+                        content: data.message,
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                Modal.error({
+                    title: '生成失败',
+                    content: '生成失败！',
+                });
+            }
+        )
     };
 
     const getRelatedBooks = (type) => {
@@ -235,6 +315,13 @@ export const BookList = () => {
                         onSearch={showAuthor}
                         style={{ marginRight: '20px' }}
                     />
+                    <Input.Search
+                        placeholder="搜索描述关键词"
+                        value={descriptionSearchValue}
+                        onChange={(e) => setDescriptionSearchValue(e.target.value)}
+                        onSearch={showDescriptionSearch}
+                        style={{ marginRight: '20px' }}
+                    />
                     <Select
                         placeholder="选择书籍类型"
                         style={{ width: '500px', marginRight: '20px' }}
@@ -247,9 +334,15 @@ export const BookList = () => {
                     </Select>
                     <Button
                         onClick={addBook}
-                        style={{ width: '50%', height: '30px', marginTop: '0' }}
+                        style={{ width: '50%', height: '30px', marginTop: '0',marginRight: '20px' }}
                     >
                         新增书籍
+                    </Button>
+                    <Button
+                        onClick={() => createBookDescriptionTxt()}
+                        style={{ width: '50%', height: '30px', marginTop: '0' }}
+                    >
+                        新建数据描述文件
                     </Button>
                 </div>
                 <br />

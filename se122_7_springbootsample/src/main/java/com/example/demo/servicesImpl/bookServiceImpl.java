@@ -195,7 +195,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Msg getWordCount(){
         // 调用 SparkSubmitRunner 类中的 sparkRunner 方法
-        SparkSubmitRunner.sparkRunner();
+//        SparkSubmitRunner.sparkRunner();
 //        Map<String, Integer> result = new HashMap<>();
         String filePath = "D:\\bookstore\\demo\\se3353_25_spark_python\\output\\part-00000";
 //        try {
@@ -227,6 +227,38 @@ public class BookServiceImpl implements BookService {
                     int count = Integer.parseInt(line.substring(commaIndex + 1, endIndex).trim());
 
                     resultMap.put(tag, count);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Msg(-1, "get word count failed");
+        }
+
+        return new Msg(1, "get word count success", resultMap);
+    }
+
+    @Override
+    public Msg getWordCountByKeyword(String keyword){
+        // 调用 SparkSubmitRunner 类中的 sparkRunner 方法
+        SparkSubmitRunner.sparkRunner(keyword);
+        String filePath = "D:\\bookstore\\demo\\se3353_25_spark_python\\output\\part-00000";
+        Map<String, Integer> resultMap = new HashMap<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // 假设文件的每一行格式为 ('code', 7) 这样的形式
+                // 使用简单的字符串操作来提取tag和对应的计数值
+                int startIndex = line.indexOf('(') + 1;
+                int commaIndex = line.indexOf(',');
+                int endIndex = line.indexOf(')');
+
+                if (startIndex != -1 && commaIndex != -1 && endIndex != -1) {
+                    String tag = line.substring(startIndex, commaIndex).trim().replace("'", "");
+                    int count = Integer.parseInt(line.substring(commaIndex + 1, endIndex).trim());
+
+                    if(tag.contains(keyword))
+                        resultMap.put(tag, count);
                 }
             }
         } catch (Exception e) {

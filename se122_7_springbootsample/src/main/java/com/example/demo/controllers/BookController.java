@@ -268,6 +268,18 @@ public class BookController {
 
     }
 
+    @RequestMapping("/getWordCountByKeyword/{keyword}")
+    public ResponseEntity<Msg> getWordCountByKeyword(@PathVariable String keyword){
+        Msg result = bookService.getWordCountByKeyword(keyword);
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
+
+    }
+
 
 }
 

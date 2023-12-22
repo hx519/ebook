@@ -20,4 +20,5 @@ public interface BookService {
     boolean addBookDescriptionTxt(String path, String description);
     boolean deleteAllFilesInDirectory(String directoryPath);
     Msg getWordCount();
+    Msg getWordCountByKeyword(String keyword);
 }

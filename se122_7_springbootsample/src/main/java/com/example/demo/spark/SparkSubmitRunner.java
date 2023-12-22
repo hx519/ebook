@@ -3,10 +3,11 @@ package com.example.demo.spark;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class SparkSubmitRunner {
 
-    public static void sparkRunner() {
+    public static void sparkRunner(String keyword) {
         try {
             // 构建 spark-submit 命令
             ProcessBuilder processBuilder = new ProcessBuilder(
@@ -18,6 +19,9 @@ public class SparkSubmitRunner {
                     "--conf", "spark.pyspark.python=D:\\anaconda\\des\\envs\\pytorch\\python.exe",
                     "D:\\bookstore\\demo\\se3353_25_spark_python\\main.py"
             );
+
+            // 将关键字参数添加到命令列表中
+            processBuilder.command().addAll(Arrays.asList("--keywords", keyword));
 
             // 将输出重定向到 Java 控制台
             processBuilder.redirectErrorStream(true);
