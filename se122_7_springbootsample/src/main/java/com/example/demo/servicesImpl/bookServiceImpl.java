@@ -4,11 +4,20 @@ import com.example.demo.dao.BookTypeDao;
 import com.example.demo.entity.BookType;
 import com.example.demo.repository.BookTypeRepository;
 import com.example.demo.services.BookService;
+import com.example.demo.spark.SparkSubmitRunner;
 import com.example.demo.utils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.entity.Book;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,5 +140,100 @@ public class BookServiceImpl implements BookService {
     @Override
     public Book getBookByTitle(String title){
         return bookDao.getBookByTitle(title);
+    }
+
+    @Override
+    public boolean addBookDescriptionTxt(String path, String description){
+        try {
+            // 将描述文本追加到指定文件
+            Files.write(Paths.get(path), description.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+
+            // 如果成功写入，则返回 true
+            return true;
+        } catch (IOException e) {
+            // 处理异常，这里可以根据实际情况进行处理，比如记录日志
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 辅助方法：删除指定目录中的所有文件
+    @Override
+    public boolean deleteAllFilesInDirectory(String directoryPath) {
+        File directory = new File(directoryPath);
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (!file.delete()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Msg createBookDescriptionTxt(){
+        // 删除books目录中的所有文件
+        String booksDirectoryPath = "D:\\bookstore\\demo\\se3353_25_spark_python\\books";
+        if (!deleteAllFilesInDirectory(booksDirectoryPath)) {
+            return new Msg(-1, "Failed to delete existing files in the books directory");
+        }
+
+        // 获取所有书籍并创建描述文件
+        List<Book> books = bookDao.getBooks();
+        for(Book book: books){
+            String type = book.getType();
+            String description = book.getDescription();
+            String path = "D:\\bookstore\\demo\\se3353_25_spark_python\\books\\" + type + ".txt";
+            if(!addBookDescriptionTxt(path, description))
+                return new Msg(-1, "create book description txt failed");
+        }
+        return new Msg(1, "create book description txt success");
+    }
+
+    @Override
+    public Msg getWordCount(){
+        // 调用 SparkSubmitRunner 类中的 sparkRunner 方法
+        SparkSubmitRunner.sparkRunner();
+//        Map<String, Integer> result = new HashMap<>();
+        String filePath = "D:\\bookstore\\demo\\se3353_25_spark_python\\output\\part-00000";
+//        try {
+//            // 读取 Spark 生成的结果文件
+//            List<String> lines = Files.readAllLines(Paths.get(path));
+//            for(String line: lines){
+//                String[] words = line.split(" ");
+//                result.put(words[0], Integer.parseInt(words[1]));
+//            }
+//            return new Msg(1, "get word count success", result);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return new Msg(-1, "get word count failed");
+//        }
+//        String filePath = "D:\\PythonProjects\\se3353_25_spark_python\\output2\\part-00001";
+        Map<String, Integer> resultMap = new HashMap<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // 假设文件的每一行格式为 ('code', 7) 这样的形式
+                // 使用简单的字符串操作来提取tag和对应的计数值
+                int startIndex = line.indexOf('(') + 1;
+                int commaIndex = line.indexOf(',');
+                int endIndex = line.indexOf(')');
+
+                if (startIndex != -1 && commaIndex != -1 && endIndex != -1) {
+                    String tag = line.substring(startIndex, commaIndex).trim().replace("'", "");
+                    int count = Integer.parseInt(line.substring(commaIndex + 1, endIndex).trim());
+
+                    resultMap.put(tag, count);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Msg(-1, "get word count failed");
+        }
+
+        return new Msg(1, "get word count success", resultMap);
     }
 }

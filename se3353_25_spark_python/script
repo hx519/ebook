@@ -1,0 +1,1 @@
+D:/spark/spark-3.5.0-bin-hadoop3/bin/spark-submit --class "SimpleApp"  --master local  SimpleApp.py

@@ -245,5 +245,29 @@ public class BookController {
 //    }
 
 
+    @RequestMapping("/createBookDescriptionTxt")
+    public ResponseEntity<Msg> createBookDescriptionTxt(){
+        Msg result = bookService.createBookDescriptionTxt();
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
+    }
+
+    @RequestMapping("/getWordCount")
+    public ResponseEntity<Msg> getWordCount(){
+        Msg result = bookService.getWordCount();
+        if(result.getStatus() >= 0){
+            return ResponseEntity.ok(result);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
+
+    }
+
+
 }
 

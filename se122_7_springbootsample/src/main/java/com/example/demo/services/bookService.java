@@ -16,4 +16,8 @@ public interface BookService {
     Msg getBookTypeNames();
     Msg getBookByType(String typeName);
     Book getBookByTitle(String title);
+    Msg createBookDescriptionTxt();
+    boolean addBookDescriptionTxt(String path, String description);
+    boolean deleteAllFilesInDirectory(String directoryPath);
+    Msg getWordCount();
 }
