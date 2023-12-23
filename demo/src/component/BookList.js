@@ -172,8 +172,10 @@ export const BookList = () => {
         .then((data) => {
             console.log(data.data);
             if(data.status === 1){
+                console.log(data.data);
                 Modal.success({
-                    title: '本书描述是:' + json.stringify(data.data)});
+                    // data.data是一个map，需要转换成字符串
+                    title: '本书描述关键词是:' + JSON.stringify(data.data),});
             }
             else{
                 Modal.error({
@@ -379,6 +381,13 @@ export const BookList = () => {
                     onSearch={showAuthor}
                     style={{ marginRight: '20px' }}
                 />
+                <Input.Search
+                        placeholder="搜索描述关键词"
+                        value={descriptionSearchValue}
+                        onChange={(e) => setDescriptionSearchValue(e.target.value)}
+                        onSearch={showDescriptionSearch}
+                        style={{ marginRight: '20px' }}
+                    />
                 <Select
                     placeholder="选择书籍类型"
                     style={{ width: '500px', marginRight: '20px' }}
@@ -389,6 +398,12 @@ export const BookList = () => {
                         <Option key={type} value={type}>{type}</Option>
                     ))}
                 </Select>
+                <Button
+                        onClick={() => createBookDescriptionTxt()}
+                        style={{ width: '50%', height: '30px', marginTop: '0' }}
+                    >
+                        新建数据描述文件
+                </Button>
             </div>
             <br />
             <List

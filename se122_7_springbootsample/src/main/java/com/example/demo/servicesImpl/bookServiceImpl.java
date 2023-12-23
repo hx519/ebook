@@ -195,7 +195,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Msg getWordCount(){
         // 调用 SparkSubmitRunner 类中的 sparkRunner 方法
-//        SparkSubmitRunner.sparkRunner();
+        SparkSubmitRunner.sparkRunner(null);
 //        Map<String, Integer> result = new HashMap<>();
         String filePath = "D:\\bookstore\\demo\\se3353_25_spark_python\\output\\part-00000";
 //        try {
