@@ -139,6 +139,30 @@ export const BookList = () => {
     );
     };
 
+    const showHadoopResult = () => {
+        fetch('http://localhost:8080/getWordCountByHadoop', {
+        method: 'GET',
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.data);
+            if(data.status === 1){
+                Modal.success({
+                    title: 'hadoop结果是:' + JSON.stringify(data.data),});
+            }
+            else{
+                Modal.error({
+                    title: '查询失败',
+                    content: data.message,
+                });
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+        }
+    );
+    };
+
     const showDescriptionSearch = (title) => {
         if(title === '' || title === "0"){
             fetch('http://localhost:8080/getWordCount', {
@@ -297,7 +321,7 @@ export const BookList = () => {
         getAllType();
     }, []);
 
-    const filteredBooks = books.filter(book => book.title.includes(searchValue));
+    // const filteredBooks = books.filter(book => book.title.includes(searchValue));
 
     if(localStorage.getItem('mode') === 'admin'){
         return (
@@ -342,17 +366,23 @@ export const BookList = () => {
                     </Button>
                     <Button
                         onClick={() => createBookDescriptionTxt()}
-                        style={{ width: '50%', height: '30px', marginTop: '0' }}
+                        style={{ width: '50%', height: '30px', marginTop: '0',marginRight: '20px' }}
                     >
                         新建数据描述文件
+                    </Button>
+                    <Button
+                        onClick={() => showHadoopResult()}
+                        style={{ width: '50%', height: '30px', marginTop: '0' }}
+                    >
+                        获取hadoop结果
                     </Button>
                 </div>
                 <br />
                 <List
                     id='bookList'
                     grid={{ gutter: 10, column: 4 }}
-                    dataSource={filteredBooks}
-                    // dataSource={books}
+                    // dataSource={filteredBooks}
+                    dataSource={books}
                     pagination={false}
                     renderItem={item => (
                         <List.Item >
@@ -400,17 +430,23 @@ export const BookList = () => {
                 </Select>
                 <Button
                         onClick={() => createBookDescriptionTxt()}
-                        style={{ width: '50%', height: '30px', marginTop: '0' }}
+                        style={{ width: '50%', height: '30px', marginTop: '0',marginRight: '20px' }}
                     >
                         新建数据描述文件
+                </Button>
+                <Button
+                        onClick={() => showHadoopResult()}
+                        style={{ width: '50%', height: '30px', marginTop: '0' }}
+                    >
+                        获取hadoop结果
                 </Button>
             </div>
             <br />
             <List
                 id='bookList'
                 grid={{ gutter: 10, column: 4 }}
-                dataSource={filteredBooks}
-                // dataSource={books}
+                // dataSource={filteredBooks}
+                dataSource={books}
                 pagination={false}
                 renderItem={item => (
                     <List.Item >

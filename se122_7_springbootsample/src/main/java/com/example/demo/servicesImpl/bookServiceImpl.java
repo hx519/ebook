@@ -2,6 +2,7 @@ package com.example.demo.servicesImpl;
 import com.example.demo.dao.BookDao;
 import com.example.demo.dao.BookTypeDao;
 import com.example.demo.entity.BookType;
+import com.example.demo.hadoop.HadoopRunner;
 import com.example.demo.repository.BookTypeRepository;
 import com.example.demo.services.BookService;
 import com.example.demo.spark.SparkSubmitRunner;
@@ -268,4 +269,41 @@ public class BookServiceImpl implements BookService {
 
         return new Msg(1, "get word count success", resultMap);
     }
+
+    @Override
+    public Msg getWordCountByHadoop(){
+        try{
+            if (!deleteAllFilesInDirectory("D:\\bookstore\\demo\\se3353_25_spark_python\\hadoopOutput")) {
+                return new Msg(-1, "Failed to delete existing files in the books directory");
+            }
+            // 调用 HadoopRunner 类中的 WordCount 方法
+            HadoopRunner.WordCount();
+            String filePath = "D:\\bookstore\\demo\\se3353_25_spark_python\\hadoopOutput\\part-r-00000";
+            Map<String, Integer> resultMap = new HashMap<>();
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // 假设文件的每一行格式为 code 7
+                    String[] parts = line.split("\t"); // 使用制表符'\t'分割字符串
+                    if (parts.length == 2) {
+                        String key = parts[0].trim();
+                        int value = Integer.parseInt(parts[1].trim());
+                        resultMap.put(key, value);
+                    } else {
+                        System.err.println("Invalid line format: " + line);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new Msg(-1, "get word count failed");
+            }
+
+            return new Msg(1, "get word count success", resultMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Msg(-1, "get word count failed");
+        }
+    }
+
 }

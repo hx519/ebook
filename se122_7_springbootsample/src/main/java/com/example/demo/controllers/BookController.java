@@ -24,108 +24,100 @@ import java.util.Map;
 @RestController
 public class BookController {
     @Autowired
-    private  BookService bookService;
+    private BookService bookService;
     @Autowired
     private BookTypeRepository bookTypeRepository;
     @Autowired
     private RedisUtil redisUtil;
 
     @GetMapping("/bookList")
-    public ResponseEntity<Msg> getAllBooks(){
+    public ResponseEntity<Msg> getAllBooks() {
         Msg result = bookService.getAllBooks();
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 
     @PostMapping("/deleteBook")
-    public ResponseEntity<Msg> deleteBook(@RequestBody Long id){
+    public ResponseEntity<Msg> deleteBook(@RequestBody Long id) {
         Msg result = bookService.deleteBook(id);
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 
     @PostMapping("/addBook")
-    public ResponseEntity<Msg> addBook(@RequestBody Map<String, String> book){
+    public ResponseEntity<Msg> addBook(@RequestBody Map<String, String> book) {
         Msg result = bookService.addBook(book);
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Msg> search(@RequestParam String keyword){
+    public ResponseEntity<Msg> search(@RequestParam String keyword) {
         Msg result = bookService.search(keyword);
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 
     @PostMapping("/updateBook/{id}")
-    public ResponseEntity<Msg> updateBook(@RequestBody Map<String, String> book, @PathVariable String id){
+    public ResponseEntity<Msg> updateBook(@RequestBody Map<String, String> book, @PathVariable String id) {
         Msg result = bookService.updateBook(book, Long.parseLong(id));
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 
     @GetMapping("/getBook/{id}")
-    public ResponseEntity<Msg> getBook(@PathVariable String id){
+    public ResponseEntity<Msg> getBook(@PathVariable String id) {
         Msg result = bookService.getBook(Long.parseLong(id));
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 
     @GetMapping("/getBookTypeNames")
-    public ResponseEntity<Msg> getBookTypeNames(){
+    public ResponseEntity<Msg> getBookTypeNames() {
         Msg result = bookService.getBookTypeNames();
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 
     @GetMapping("/getBookByType/{typename}")
-    public ResponseEntity<Msg> getBookByType(@PathVariable String typename){
+    public ResponseEntity<Msg> getBookByType(@PathVariable String typename) {
         Msg result = bookService.getBookByType(typename);
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 
     @RequestMapping("/initRedis")
-    public ResponseEntity<Msg> initRedis(){
+    public ResponseEntity<Msg> initRedis() {
         redisUtil.del("book*");
         return ResponseEntity.ok(new Msg(1, "redis init success"));
     }
 
     @RequestMapping("/neo4j")
-    public ResponseEntity<Msg> initNeo4j(){
+    public ResponseEntity<Msg> initNeo4j() {
         // 先删除所有的内容
         bookTypeRepository.deleteAll();
         // 添加书籍类型
@@ -221,12 +213,11 @@ public class BookController {
     }
 
     @RequestMapping("/getBookByTitle/{name}")
-    public ResponseEntity<Msg> getBookByTitle(@PathVariable String name){
+    public ResponseEntity<Msg> getBookByTitle(@PathVariable String name) {
         Msg result = bookService.search(name);
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
 
@@ -246,40 +237,47 @@ public class BookController {
 
 
     @RequestMapping("/createBookDescriptionTxt")
-    public ResponseEntity<Msg> createBookDescriptionTxt(){
+    public ResponseEntity<Msg> createBookDescriptionTxt() {
         Msg result = bookService.createBookDescriptionTxt();
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
     }
 
     @RequestMapping("/getWordCount")
-    public ResponseEntity<Msg> getWordCount(){
+    public ResponseEntity<Msg> getWordCount() {
         Msg result = bookService.getWordCount();
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
 
     }
 
     @RequestMapping("/getWordCountByKeyword/{keyword}")
-    public ResponseEntity<Msg> getWordCountByKeyword(@PathVariable String keyword){
+    public ResponseEntity<Msg> getWordCountByKeyword(@PathVariable String keyword) {
         Msg result = bookService.getWordCountByKeyword(keyword);
-        if(result.getStatus() >= 0){
+        if (result.getStatus() >= 0) {
             return ResponseEntity.ok(result);
-        }
-        else{
+        } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
         }
 
     }
 
+    @RequestMapping("/getWordCountByHadoop")
+    public ResponseEntity<Msg> getWordCountByHadoop() {
+        Msg result = bookService.getWordCountByHadoop();
+        if (result.getStatus() >= 0) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+        }
+
+    }
 
 }
 

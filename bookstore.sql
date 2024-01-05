@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS user(
 -- ----------------------------
 INSERT INTO `user` VALUES ( '1', 'user1', '11111111111', 'A', 'email1@qq.com', 'https://tupian.qqw21.com/article/UploadPic/2020-8/20208522181570993.jpg', 'admin');
 INSERT INTO `user` VALUES ( '2', 'user2', '22222222222', 'B', 'email2@qq.com', 'https://www.qqkw.com/d/file/p/2018/07-19/0a3bdaa7cbe14b0da52d7b8f3b2b0855.jpg', 'user');
-INSERT INTO `user` VALUES ( '3', 'user3', '33333333333', 'C市', 'email3@qq.com', 'https://tupian.qqw21.com/article/UploadPic/2020-5/2020514225358304.jpg', 'user');
+INSERT INTO `user` VALUES ( '3', 'user3', '33333333333', 'C', 'email3@qq.com', 'https://tupian.qqw21.com/article/UploadPic/2020-5/2020514225358304.jpg', 'user');
 
 -- ----------------------------
 -- Table structure for userpassword

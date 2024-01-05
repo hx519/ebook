@@ -21,4 +21,5 @@ public interface BookService {
     boolean deleteAllFilesInDirectory(String directoryPath);
     Msg getWordCount();
     Msg getWordCountByKeyword(String keyword);
+    Msg getWordCountByHadoop();
 }
